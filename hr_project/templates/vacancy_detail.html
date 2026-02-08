@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <a href="/" style="display: inline-block; margin-bottom: 2rem; color: var(--text-muted);">&larr; Volver a las
+        ofertas</a>
+
+    <div style="background: white; padding: 3rem; border-radius: 8px; border: 1px solid var(--border-color);">
+        <span class="tag" style="margin-bottom: 1rem; display: inline-block;">{{ vacancy.company.industry }}</span>
+        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">{{ vacancy.title }}</h1>
+        <p style="font-size: 1.25rem; color: var(--text-muted); margin-bottom: 2rem;">en {{ vacancy.company.name }}</p>
+
+        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 2rem 0;">
+
+        <div style="line-height: 1.8;">
+            {{ vacancy.description|linebreaks }}
+        </div>
+
+        <div style="margin-top: 4rem;">
+            <h3 style="margin-bottom: 2rem;">Postularse a esta posición</h3>
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="text" name="first_name" required>
+                </div>
+                <div class="form-group">
+                    <label>Apellido</label>
+                    <input type="text" name="last_name" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Teléfono</label>
+                    <input type="text" name="phone">
+                </div>
+
+                <div class="form-group">
+                    <label>CV / Currículum (PDF/Word)</label>
+                    <input type="file" name="resume" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Habilidades Clave (Separadas por coma)</label>
+                    <input type="text" name="skills" placeholder="ej: Python, SQL, Ventas">
+                </div>
+
+                {% if killer_questions %}
+                <div style="background: #f1f5f9; padding: 1.5rem; border-radius: 6px; margin: 2rem 0;">
+                    <h4 style="margin-top: 0;">Preguntas de Pre-selección</h4>
+                    {% for q in killer_questions %}
+                    <div class="form-group">
+                        <label>{{ q.text }}</label>
+                        <input type="text" name="question_{{ q.id }}" required>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem;">Enviar
+                    Postulación</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

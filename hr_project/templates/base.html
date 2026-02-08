@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MZ Recursos Humanos{% endblock %} | Marina Zubiani</title>
+    <!-- Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        .alert-success {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .alert-info {
+            background: #eff6ff;
+            color: #1e40af;
+            border: 1px solid #bfdbfe;
+        }
+
+        .alert-warning {
+            background: #fef9c3;
+            color: #854d0e;
+            border: 1px solid #fde047;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <a href="/" class="logo">MZ Recursos Humanos</a>
+            <nav class="nav-links">
+                {% if user.is_authenticated %}
+                <span style="margin-right: 1rem; color: var(--text-muted); font-size: 0.9rem;">Hola, {{ user }}</span>
+
+                {% if user.company_profile %}
+                <a href="{% url 'client_portal' %}">Mi Portal</a>
+                {% elif user.candidate_profile %}
+                <a href="{% url 'candidate_dashboard' %}">Mi Panel</a>
+                {% elif user.is_staff %}
+                <a href="{% url 'dashboard_home' %}">Panel Recruiter</a>
+                {% endif %}
+
+                <form action="{% url 'logout' %}" method="post" style="display:inline; margin-left: 0.5rem;">
+                    {% csrf_token %}
+                    <button type="submit"
+                        style="background: none; border: 1px solid var(--border-color); padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; color: var(--text-color); font-size: 0.9rem;">Cerrar
+                        Sesión</button>
+                </form>
+                {% else %}
+                <a href="/">Oportunidades</a>
+                <a href="/candidates/login/">Soy Candidato</a>
+                <a href="{% url 'client_login' %}">Soy Empresa</a>
+                <a href="{% url 'dashboard_login' %}"
+                    style="border: 1px solid var(--border-color); padding: 0.5rem 1rem; border-radius: 4px; margin-left: 1rem;">Acceso
+                    Staff</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="container" style="padding-top: 3rem; padding-bottom: 3rem;">
+        {% if messages %}
+        <div class="messages" style="margin-bottom: 2rem;">
+            {% for message in messages %}
+            <div class="alert-{{ message.tags }}" style="padding: 1rem; border-radius: 6px; margin-bottom: 0.5rem;">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2026 MZ Recursos Humanos - Marina Zubiani. Todos los derechos reservados.</p>
+    </footer>
+</body>
+
+</html>

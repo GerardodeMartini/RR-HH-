@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="text-align: center; max-width: 700px; margin: 0 auto 4rem auto;">
+    <h1>Unete al Futuro</h1>
+    <p style="font-size: 1.25rem; color: var(--text-muted);">Explora nuestras oportunidades laborales exclusivas.
+        Conectamos el mejor talento con empresas líderes.</p>
+</div>
+
+<div class="vacancy-grid">
+    {% for vacancy in vacancies %}
+    <div class="vacancy-card">
+        <div class="vacancy-meta">
+            <span>{{ vacancy.company.name }}</span>
+            <span>&bull;</span>
+            <span>{{ vacancy.created_at|date:"d M" }}</span>
+        </div>
+        <h3><a href="{% url 'vacancy_detail' vacancy.id %}">{{ vacancy.title }}</a></h3>
+        <p>{{ vacancy.description|truncatewords:20 }}</p>
+        <div style="margin-top: 1.5rem;">
+            <a href="{% url 'vacancy_detail' vacancy.id %}" class="btn btn-outline"
+                style="width: 100%; text-align: center;">Ver Posición</a>
+        </div>
+    </div>
+    {% empty %}
+    <p>No hay posiciones abiertas en este momento.</p>
+    {% endfor %}
+</div>
+{% endblock %}

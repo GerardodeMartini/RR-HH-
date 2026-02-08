@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h1>Panel de Control</h1>
+        <div class="user-info">
+            <span>Hola, {{ user.username }}</span> |
+            <a href="{% url 'dashboard_logout' %}" style="color: red;">Salir</a>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div style="display: flex; gap: 2rem; margin-bottom: 3rem;">
+        <div class="vacancy-card" style="flex: 1; padding: 1.5rem; text-align: center;">
+            <h3 style="margin: 0; font-size: 2rem; color: var(--accent-color);">{{ total_candidates }}</h3>
+            <span style="color: var(--text-muted);">Total Candidatos</span>
+        </div>
+        <div class="vacancy-card" style="flex: 1; padding: 1.5rem; text-align: center;">
+            <h3 style="margin: 0; font-size: 2rem; color: var(--success);">{{ active_candidates }}</h3>
+            <span style="color: var(--text-muted);">Activos (Buscando)</span>
+        </div>
+        <div class="vacancy-card" style="flex: 1; padding: 1.5rem; text-align: center;">
+            <h3 style="margin: 0; font-size: 2rem;">{{ vacancies.count }}</h3>
+            <span style="color: var(--text-muted);">Vacantes Abiertas</span>
+        </div>
+    </div>
+
+    <div style="margin-bottom: 2rem; text-align: right;">
+        <a href="{% url 'staff_candidate_list' %}" class="btn btn-primary"
+            style="padding: 0.8rem 1.5rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
+            <span>👥</span> Ver Base de Talentos Completa
+        </a>
+    </div>
+
+    <h2>Vacantes Activas</h2>
+    <div class="vacancy-grid" style="margin-top: 1rem;">
+        {% for vacancy in vacancies %}
+        <div class="vacancy-card">
+            <h3>{{ vacancy.title }}</h3>
+            <p>{{ vacancy.company.name }}</p>
+            <div style="margin-top: 1rem;">
+                <a href="{% url 'kanban_board' vacancy.id %}" class="btn btn-primary"
+                    style="width: 100%; text-align: center;">Gestionar Pipeline</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

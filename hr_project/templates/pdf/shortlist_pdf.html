@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: sans-serif; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .candidate { border: 1px solid #ccc; padding: 15px; margin-bottom: 10px; page-break-inside: avoid; }
+        .candidate h2 { color: #333; margin-top: 0; }
+        .skills { color: #666; font-style: italic; }
+        .match-score { float: right; font-weight: bold; color: #2ecc71; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Candidate Shortlist (Terna)</h1>
+        <p>Generated Report - HR Project</p>
+    </div>
+
+    {% for application in applications %}
+    <div class="candidate">
+        <span class="match-score">Match: {{ application.match_score }}%</span>
+        <h2>{{ application.candidate.first_name }} {{ application.candidate.last_name }}</h2>
+        <p><strong>Applying for:</strong> {{ application.vacancy.title }}</p>
+        <p><strong>Email:</strong> {{ application.candidate.email }}</p>
+        <p><strong>Phone:</strong> {{ application.candidate.phone }}</p>
+        
+        <p class="skills"><strong>Skills:</strong> {{ application.candidate.skills }}</p>
+        
+        {% if application.notes %}
+        <p><strong>HR Notes:</strong> {{ application.notes }}</p>
+        {% endif %}
+        
+        <h4>Tags:</h4>
+        <p>
+            {% for tag in application.candidate.tags.all %}
+                {{ tag.name }}{% if not forloop.last %}, {% endif %}
+            {% empty %}
+                No tags
+            {% endfor %}
+        </p>
+    </div>
+    {% endfor %}
+</body>
+</html>

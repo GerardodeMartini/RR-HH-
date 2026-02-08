@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div
+    style="text-align: center; max-width: 600px; margin: 4rem auto; background: var(--card-bg); padding: 3rem; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+    <h1 style="margin-bottom: 2rem;">Hola, {{ candidate.first_name }}</h1>
+    <p style="font-size: 1.2rem; color: var(--text-muted); margin-bottom: 3rem;">
+        Estamos actualizando nuestra base de talento para ofrecerte mejores oportunidades.<br>
+        ¿Sigues abierto a escuchar nuevas propuestas laborales?
+    </p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <button type="submit" name="action" value="confirm" class="btn btn-primary">
+                Sí, estoy escuchando ofertas
+            </button>
+            <button type="submit" name="action" value="dormant" class="btn btn-outline">
+                No, no estoy buscando
+            </button>
+        </div>
+    </form>
+
+    <p style="margin-top: 2rem; font-size: 0.875rem; color: var(--text-muted);">
+        Al hacer clic en "No", pausaremos las notificaciones por 6 meses.
+    </p>
+</div>
+{% endblock %}

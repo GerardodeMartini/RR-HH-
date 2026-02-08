@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="text-align: center; padding: 4rem 0;">
+    <h1 style="color: var(--success); font-size: 3rem;">&check;</h1>
+    <h1>Postulación Recibida</h1>
+    <p>¡Gracias! Hemos recibido tu aplicación para <strong>{{ vacancy.title }}</strong> correctamente.</p>
+    <div style="margin-top: 2rem;">
+        <a href="/" class="btn btn-outline">Volver a Oportunidades</a>
+    </div>
+</div>
+{% endblock %}

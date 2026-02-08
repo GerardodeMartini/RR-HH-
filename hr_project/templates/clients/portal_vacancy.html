@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div style="margin-bottom: 2rem;">
+        <a href="{% url 'client_portal' %}" style="color: var(--text-muted);">&larr; Volver a Mis Procesos</a>
+        <h1 style="margin-top: 0.5rem; margin-bottom: 0;">{{ vacancy.title }}</h1>
+        <span class="tag" style="background: var(--accent-color); color: white;">Candidatos Finalistas</span>
+    </div>
+
+    {% if new_applicants %}
+    <div style="margin-bottom: 3rem;">
+        <h3 style="border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">Nuevos Postulantes</h3>
+        <div style="display: grid; gap: 1.5rem;">
+            {% for app in new_applicants %}
+            <div style="background: white; border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; display: flex; gap: 1.5rem; align-items: start;">
+                <div style="flex: 1;">
+                    <h3 style="margin: 0; font-size: 1.1rem;">{{ app.candidate.first_name }} {{ app.candidate.last_name }}</h3>
+                    <p style="color: var(--text-muted); margin: 0.25rem 0;">{{ app.candidate.email }}</p>
+                    <p style="margin-top: 0.5rem; font-size: 0.9rem;"><strong>Estado:</strong> {{ app.get_status_display }}</p>
+                    {% if app.candidate.skills %}
+                    <div style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">
+                        Skills: {{ app.candidate.skills|truncatechars:100 }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div style="text-align: right;">
+                    {% if app.candidate.resume_file %}
+                    <a href="{{ app.candidate.resume_file.url }}" target="_blank" class="btn btn-sm btn-outline">Ver CV</a>
+                    {% else %}
+                    <span style="font-size: 0.8rem; color: #999;">Sin CV</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if shortlisted_apps %}
+    <div style="display: grid; gap: 2rem;">
+        {% for app in shortlisted_apps %}
+        <div style="background: white; border: 1px solid var(--border-color); border-radius: 8px; padding: 2rem; display: flex; gap: 2rem; align-items: start;">
+            <!-- Left: Info -->
+            <div style="flex: 1;">
+                <h2 style="margin: 0;">{{ app.candidate.first_name }} {{ app.candidate.last_name }}</h2>
+                <p style="color: var(--text-muted); margin-top: 0.5rem;">{{ app.candidate.email }} | {{ app.candidate.phone }}</p>
+
+                <div style="margin-top: 1rem;">
+                    <strong>Habilidades:</strong> {{ app.candidate.skills }}
+                </div>
+            </div>
+
+            <!-- Right: Actions -->
+            <div style="text-align: right;">
+                {% if app.candidate.resume_file %}
+                <a href="{{ app.candidate.resume_file.url }}" target="_blank" class="btn btn-outline">
+                    Descargar CV (PDF)
+                </a>
+                {% else %}
+                <span style="color: red;">Sin CV cargado</span>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 4rem; background: var(--bg-color); border-radius: 8px;">
+        <h3>Aún estamos trabajando en tu selección.</h3>
+        <p>Nuestro equipo está filtrando los mejores perfiles. Pronto verás aquí la terna finalista.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

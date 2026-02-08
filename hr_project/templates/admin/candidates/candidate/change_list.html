@@ -1,0 +1,23 @@
+{% extends "admin/change_list.html" %}
+
+{% block result_list %}
+<div style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 5px;">
+    <h3 style="margin-top: 0;">Database Quality Dashboard</h3>
+    <div style="display: flex; gap: 30px;">
+        <div>
+            <strong>Total Database:</strong> {{ quality_metrics.total }}
+        </div>
+        <div>
+            <strong>Active Candidates:</strong>
+            <span
+                style="color: {% if quality_metrics.active_pct > 50 %}green{% else %}red{% endif %}; font-weight: bold;">
+                {{ quality_metrics.active_pct }}%
+            </span>
+        </div>
+        <div>
+            <strong>Dormant/Not Looking:</strong> {{ quality_metrics.dormant }}
+        </div>
+    </div>
+</div>
+{{ block.super }}
+{% endblock %}

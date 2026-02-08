@@ -1,0 +1,206 @@
+/* Corporate Design System */
+:root {
+    /* Palette */
+    --primary-color: #0f172a;
+    /* Deep Navy */
+    --secondary-color: #334155;
+    /* Slate */
+    --accent-color: #2563eb;
+    /* Royal Blue */
+    --accent-hover: #1d4ed8;
+    --bg-color: #f8fafc;
+    /* Off-white */
+    --card-bg: #ffffff;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --success: #10b981;
+    --border-color: #e2e8f0;
+
+    /* Typography */
+    --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Global Reset */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* Typography */
+h1,
+h2,
+h3 {
+    color: var(--primary-color);
+    font-weight: 700;
+    margin-bottom: 0.5em;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s;
+}
+
+/* Layout */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header */
+header {
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    letter-spacing: -0.5px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.nav-links a {
+    margin-left: 0;
+    color: var(--secondary-color);
+    font-weight: 500;
+}
+
+.nav-links a:hover {
+    color: var(--accent-color);
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background: var(--accent-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+}
+
+.btn-outline {
+    border: 2px solid var(--border-color);
+    color: var(--secondary-color);
+    background: transparent;
+}
+
+.btn-outline:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+
+/* Vacancy Cards */
+.vacancy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.vacancy-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 2rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.vacancy-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border-color: var(--accent-color);
+}
+
+.vacancy-meta {
+    display: flex;
+    gap: 1rem;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+}
+
+.tag {
+    background: #e0f2fe;
+    color: #0369a1;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--secondary-color);
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+input:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    ring: 2px solid #bfdbfe;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 4rem 0;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    border-top: 1px solid var(--border-color);
+    margin-top: 5rem;
+}

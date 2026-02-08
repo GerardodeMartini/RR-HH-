@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <a href="{% url 'client_portal' %}" style="color: var(--text-muted);">&larr; Volver al Inicio</a>
+            <h1 style="margin-top: 0.5rem; margin-bottom: 0;">Base de Talentos</h1>
+            <p style="color: var(--text-muted);">Candidatos activos en la plataforma</p>
+        </div>
+    </div>
+
+    {% if candidates %}
+    <div style="display: grid; gap: 1.5rem;">
+        {% for candidate in candidates %}
+        <div
+            style="background: white; border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; display: flex; gap: 1.5rem; align-items: start;">
+            <div style="flex: 1;">
+                <h3 style="margin: 0; font-size: 1.1rem;">{{ candidate.first_name }} {{ candidate.last_name }}</h3>
+                <p style="color: var(--text-muted); margin: 0.25rem 0;">{{ candidate.email }}</p>
+                {% if candidate.skills %}
+                <div style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">
+                    <strong>Skills:</strong> {{ candidate.skills }}
+                </div>
+                {% endif %}
+                <!-- Tags could go here -->
+            </div>
+            <div style="text-align: right;">
+                {% if candidate.resume_file %}
+                <a href="{{ candidate.resume_file.url }}" target="_blank" class="btn btn-sm btn-outline">Ver CV</a>
+                {% else %}
+                <span style="font-size: 0.8rem; color: #999;">Sin CV</span>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 4rem; background: var(--bg-color); border-radius: 8px;">
+        <h3>No hay candidatos activos por el momento.</h3>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

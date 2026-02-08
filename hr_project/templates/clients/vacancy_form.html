@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h1 style="margin: 0;">Publicar Nueva Vacante</h1>
+        <a href="{% url 'client_portal' %}" style="color: var(--text-muted); text-decoration: none;">&larr; Volver al
+            Portal</a>
+    </div>
+
+    <div
+        style="background: white; padding: 2rem; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+        <form method="post">
+            {% csrf_token %}
+
+            {% for field in form %}
+            <div style="margin-bottom: 1.5rem;">
+                <label for="{{ field.id_for_label }}"
+                    style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">
+                    {{ field.label }}
+                </label>
+                {{ field }}
+                {% if field.help_text %}
+                <small style="display: block; color: var(--text-muted); margin-top: 0.25rem;">{{ field.help_text
+                    }}</small>
+                {% endif %}
+                {% if field.errors %}
+                <div style="color: #991b1b; font-size: 0.9rem; margin-top: 0.25rem;">{{ field.errors.0 }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <div style="margin-top: 2rem;">
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem;">Publicar
+                    Vacante</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

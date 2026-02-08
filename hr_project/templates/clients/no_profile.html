@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="text-align: center; padding: 4rem 1rem;">
+    <div style="max-width: 600px; margin: 0 auto;">
+        <h1 style="color: var(--danger, #dc2626); margin-bottom: 1.5rem;">Perfil de Empresa No Encontrado</h1>
+        <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 2rem;">
+            Tu usuario no tiene un perfil de empresa asociado en nuestra base de datos.
+        </p>
+        <p style="margin-bottom: 2rem;">
+            Si crees que esto es un error, por favor contacta al administrador del sistema o cierra sesión e intenta con
+            otra cuenta.
+        </p>
+
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+            <a href="/" class="btn btn-outline">Volver al Inicio</a>
+            <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Cerrar Sesión</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div
+    style="max-width: 400px; margin: 4rem auto; padding: 2rem; background: white; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+    <h1 style="text-align: center; margin-bottom: 2rem; font-size: 1.5rem;">Acceso Empresas</h1>
+
+    <form method="post">
+        {% csrf_token %}
+
+        {% if form.errors %}
+        <div
+            style="background: #fee2e2; color: #991b1b; padding: 0.75rem; border-radius: 4px; margin-bottom: 1rem; font-size: 0.9rem;">
+            Usuario o contraseña incorrectos.
+        </div>
+        {% endif %}
+
+        <div style="margin-bottom: 1rem;">
+            <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Usuario</label>
+            <input type="text" name="username" class="form-control"
+                style="width: 100%; padding: 0.6rem; border: 1px solid #d1d5db; border-radius: 6px;" required autofocus>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Contraseña</label>
+            <input type="password" name="password" class="form-control"
+                style="width: 100%; padding: 0.6rem; border: 1px solid #d1d5db; border-radius: 6px;" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary"
+            style="width: 100%; padding: 0.75rem; background-color: #2563eb; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">
+            Ingresar al Portal
+        </button>
+    </form>
+
+    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: #6b7280;">
+        <p>¿No tienes cuenta? <a href="#" style="color: #2563eb;">Contáctanos</a> para registrar tu empresa.</p>
+    </div>
+</div>
+{% endblock %}

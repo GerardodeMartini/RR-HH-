@@ -1,0 +1,94 @@
+﻿{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="margin-top: 2rem;">
+    <div style="margin-bottom: 2rem;">
+        <a href="{% url 'kanban_board' application.vacancy.id %}" style="text-decoration: none; color: #64748b;">&larr;
+            Volver al Tablero</a>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+        <!-- Left Column: Candidate Info -->
+        <div>
+            <div style="background: white; padding: 2rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                <h1>{{ application.candidate.first_name }} {{ application.candidate.last_name }}</h1>
+                <p class="text-muted">{{ application.candidate.email }} | {{ application.candidate.phone }}</p>
+
+                <hr style="margin: 1.5rem 0; border: 0; border-top: 1px solid var(--border-color);">
+
+                <h3>Habilidades</h3>
+                <p>{{ application.candidate.skills }}</p>
+
+                <h3>CV Original</h3>
+                {% if application.candidate.resume_file %}
+                <a href="{{ application.candidate.resume_file.url }}" target="_blank" class="btn btn-outline">Ver
+                    PDF</a>
+                {% else %}
+                <p class="text-muted">No hay CV adjunto.</p>
+                {% endif %}
+            </div>
+
+            <!-- AI Analysis Result -->
+            {% if application.ai_summary %}
+            <div
+                style="background: #f0fdf4; padding: 2rem; border-radius: 8px; border: 1px solid #bbf7d0; margin-top: 2rem;">
+                <h2 style="color: #166534; display: flex; justify-content: space-between;">
+                    <span>🤖 Análisis de IA</span>
+                    <span
+                        style="background: #166534; color: white; padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 1rem;">Match:
+                        {{ application.ai_match_score }}%</span>
+                </h2>
+
+                <div style="margin-top: 1rem;">
+                    <h4>Resumen</h4>
+                    <p>{{ application.ai_summary }}</p>
+
+                    <h4>Feedback Detallado</h4>
+                    <div style="font-size: 0.95rem; line-height: 1.6;">{{ application.ai_feedback|linebreaks }}</div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Right Column: Actions -->
+        <div>
+            <div style="background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                <h3>Acciones</h3>
+
+                <form action="{% url 'analyze_application' application.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary"
+                        style="width: 100%; margin-bottom: 1rem; background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); border: none;">
+                        ✨ Analizar con Gemini IA
+                    </button>
+                </form>
+
+                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                    <p class="text-muted" style="font-size: 0.9rem;">
+                        <strong>Estado:</strong>
+                    </p>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <form action="{% url 'update_application_status' application.id %}" method="post" style="display: flex; gap: 0.5rem; align-items: center;">
+                            {% csrf_token %}
+                            <select name="status" class="form-select" onchange="this.form.submit()" 
+                                    style="padding: 0.5rem; border-radius: 4px; border: 1px solid #cbd5e1; flex-grow: 1;">
+                                {% for code, label in status_choices %}
+                                <option value="{{ code }}" {% if application.status == code %}selected{% endif %}>
+                                    {{ label }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <noscript><button type="submit" class="btn btn-sm btn-secondary">OK</button></noscript>
+                        </form>
+                    </div>
+
+                    <p class="text-muted" style="font-size: 0.9rem;">
+                        <strong>Postulado:</strong> {{ application.applied_at|date:"d M Y" }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div
+        style="margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1>Portal Empresa</h1>
+            <p style="color: var(--text-muted); font-size: 1.1rem;">Bienvenido, {{ company.name }}</p>
+            <div style="margin-top: 0.5rem;">
+                <a href="{% url 'company_profile' %}"
+                    style="font-size: 0.9rem; color: #2563eb; text-decoration: none;">✎ Editar Información de la
+                    Empresa</a>
+            </div>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+            <a href="{% url 'talent_pool' %}" class="btn btn-outline"
+                style="padding: 0.6rem 1.2rem; text-decoration: none;">
+                📚 Base de Talentos
+            </a>
+            <a href="{% url 'create_vacancy' %}" class="btn btn-primary"
+                style="padding: 0.6rem 1.2rem; text-decoration: none;">
+                + Publicar Oferta
+            </a>
+        </div>
+    </div>
+
+    <h2>Mis Procesos Activos</h2>
+
+    <div class="vacancy-grid">
+        {% for vacancy in vacancies %}
+        <div class="vacancy-card">
+            <div class="vacancy-meta">
+                <span>Creada: {{ vacancy.created_at|date:"d M Y" }}</span>
+            </div>
+            <h3>{{ vacancy.title }}</h3>
+            <p>{{ vacancy.description|truncatewords:15 }}</p>
+
+            <div style="margin-top: 1.5rem;">
+                <a href="{% url 'client_vacancy_view' vacancy.id %}" class="btn btn-primary"
+                    style="width: 100%; text-align: center;">
+                    Ver Candidatos Seleccionados &rarr;
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <div style="text-align: center; grid-column: 1 / -1; padding: 3rem;">
+            <p>No tienes búsquedas activas con MZ Recursos Humanos en este momento.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

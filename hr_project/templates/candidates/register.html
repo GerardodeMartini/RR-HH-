@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div
+    style="max-width: 400px; margin: 4rem auto; background: white; padding: 2rem; border-radius: 8px; border: 1px solid var(--border-color); text-align: center;">
+    <h2 style="margin-bottom: 0.5rem;">Crear Cuenta</h2>
+    <p style="color: var(--text-muted); margin-bottom: 2rem;">Regístrate para aplicar rápidamente</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <!-- Simple rendering of django form -->
+        {% for field in form %}
+        <div class="form-group" style="text-align: left;">
+            <label>{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+            <div style="color: red; font-size: 0.8rem;">{{ field.errors }}</div>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Registrarme</button>
+    </form>
+
+    <div style="margin-top: 1.5rem;">
+        <p>¿Ya tienes cuenta? <a href="{% url 'candidate_login' %}" style="color: var(--accent-color);">Ingresa aquí</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
