@@ -82,6 +82,7 @@ header .container {
 .nav-links {
     display: flex;
     gap: 1.5rem;
+    align-items: center;
 }
 
 .nav-links a {
@@ -91,6 +92,22 @@ header .container {
 }
 
 .nav-links a:hover {
+    color: var(--accent-color);
+}
+
+.btn-nav {
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    background: transparent;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    transition: all 0.2s;
+}
+
+.btn-nav:hover {
+    border-color: var(--accent-color);
     color: var(--accent-color);
 }
 
@@ -197,10 +214,60 @@ textarea:focus {
 
 /* Footer */
 footer {
-    text-align: center;
-    padding: 4rem 0;
-    color: var(--text-muted);
-    font-size: 0.875rem;
+    background: var(--card-bg);
     border-top: 1px solid var(--border-color);
     margin-top: 5rem;
+    padding: 4rem 0 2rem;
+    color: var(--text-muted);
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 3rem;
+    margin-bottom: 3rem;
+}
+
+.footer-col h4 {
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+}
+
+.footer-col ul {
+    list-style: none;
+    /* No bullets */
+    padding: 0;
+    margin: 0;
+}
+
+.footer-col ul li {
+    margin-bottom: 0.75rem;
+    padding-left: 0;
+    /* Remove default padding */
+}
+
+.footer-col p {
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.footer-col ul li a {
+    color: var(--secondary-color);
+    transition: color 0.2s;
+    text-decoration: none;
+    /* Ensure no underline unless hovered */
+}
+
+.footer-col ul li a:hover {
+    color: var(--accent-color);
+}
+
+.copyright {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-color);
+    font-size: 0.875rem;
 }

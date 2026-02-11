@@ -6,7 +6,11 @@
         <h1>Panel de Control</h1>
         <div class="user-info">
             <span>Hola, {{ user.username }}</span> |
-            <a href="{% url 'dashboard_logout' %}" style="color: red;">Salir</a>
+            <form action="{% url 'dashboard_logout' %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit"
+                    style="background: none; border: none; color: red; cursor: pointer; text-decoration: underline; padding: 0;">Salir</button>
+            </form>
         </div>
     </div>
 

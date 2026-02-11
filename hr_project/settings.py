@@ -19,15 +19,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-7a#qaemnrvr=n+xx&ht(ci_!wlz$*l&m(q^!y!@fpqlg*2kjm^'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG') == 'True'
 
 # GOOGLE GEMINI AI KEY
-GEMINI_API_KEY = 'AIzaSyBX-XnvDn8sfoSHUr6z-vwZWVZa5zdPz2w'
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 
 ALLOWED_HOSTS = []
 

@@ -54,19 +54,15 @@
                 <a href="{% url 'dashboard_home' %}">Panel Recruiter</a>
                 {% endif %}
 
-                <form action="{% url 'logout' %}" method="post" style="display:inline; margin-left: 0.5rem;">
+                <form action="{% url 'logout' %}" method="post" style="display:inline;">
                     {% csrf_token %}
-                    <button type="submit"
-                        style="background: none; border: 1px solid var(--border-color); padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; color: var(--text-color); font-size: 0.9rem;">Cerrar
-                        Sesión</button>
+                    <button type="submit" class="btn-nav">Cerrar Sesión</button>
                 </form>
                 {% else %}
                 <a href="/">Oportunidades</a>
                 <a href="/candidates/login/">Soy Candidato</a>
                 <a href="{% url 'client_login' %}">Soy Empresa</a>
-                <a href="{% url 'dashboard_login' %}"
-                    style="border: 1px solid var(--border-color); padding: 0.5rem 1rem; border-radius: 4px; margin-left: 1rem;">Acceso
-                    Staff</a>
+                <a href="{% url 'dashboard_login' %}" class="btn-nav">Acceso Staff</a>
                 {% endif %}
             </nav>
         </div>
@@ -86,7 +82,28 @@
     </main>
 
     <footer>
-        <p>&copy; 2026 MZ Recursos Humanos - Marina Zubiani. Todos los derechos reservados.</p>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>MZ Recursos Humanos</h4>
+                    <p>Conectamos talento con oportunidades. Soluciones integrales de RRHH para empresas y candidatos.
+                    </p>
+                </div>
+
+
+                <div class="footer-col">
+                    <h4>Contacto</h4>
+                    <p><strong>Dirección:</strong><br>Santa Fe y Formosa<br>Huinca Renancó, Córdoba</p>
+                    <p><strong>WhatsApp:</strong><br><a href="https://wa.me/5492336496702" target="_blank"
+                            style="color: var(--secondary-color);">+54 9 2336 49-6702</a></p>
+                    <!-- <p><strong>Email:</strong><br>[Email aquí]</p> -->
+                </div>
+            </div>
+
+            <div class="copyright">
+                <p>&copy; 2026 MZ Recursos Humanos - Marina Zubiani. Todos los derechos reservados.</p>
+            </div>
+        </div>
     </footer>
 </body>
 

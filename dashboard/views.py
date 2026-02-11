@@ -102,6 +102,20 @@ def update_application_status(request, application_id):
 @login_required
 @user_passes_test(is_recruiter)
 def candidate_list(request):
+    query = request.GET.get('q', '')
     candidates = Candidate.objects.all().order_by('-user__date_joined')
-    return render(request, 'dashboard/candidate_list.html', {'candidates': candidates})
+    
+    if query:
+        from django.db.models import Q
+        candidates = candidates.filter(
+            Q(first_name__icontains=query) |
+            Q(last_name__icontains=query) |
+            Q(email__icontains=query) |
+            Q(skills__icontains=query)
+        )
+        
+    return render(request, 'dashboard/candidate_list.html', {
+        'candidates': candidates,
+        'query': query
+    })
 

@@ -16,10 +16,16 @@
         </div>
     </div>
 
-    <!-- Search/Filter (Placeholder for future) -->
+    <!-- Search/Filter -->
     <div style="margin-bottom: 2rem;">
-        <input type="text" placeholder="Buscar por nombre o habilidad (Próximamente)..." class="form-control"
-            style="max-width: 400px; padding: 0.8rem; border: 1px solid #e5e7eb; border-radius: 6px;" disabled>
+        <form method="get" action="." style="display: flex; gap: 1rem; align-items: center;">
+            <input type="text" name="q" value="{{ query }}" placeholder="Buscar por nombre, email o habilidad..."
+                class="form-control"
+                style="max-width: 400px; padding: 0.8rem; border: 1px solid #e5e7eb; border-radius: 6px;">
+            {% if query %}
+            <a href="." style="color: #2563eb; text-decoration: none; font-weight: 500;">Ver lista completa</a>
+            {% endif %}
+        </form>
     </div>
 
     <div class="card"
@@ -38,10 +44,12 @@
                 {% for candidate in candidates %}
                 <tr style="border-bottom: 1px solid #e5e7eb;">
                     <td style="padding: 1rem;">
-                        <div style="font-weight: 500; color: #111827;">{{ candidate.first_name }} {{ candidate.last_name
-                            }}</div>
-                        <div style="font-size: 0.85rem; color: #6b7280;">Registrado: {{
-                            candidate.user.date_joined|date:"d M Y" }}</div>
+                        <div style="font-weight: 500; color: #111827;">
+                            {{ candidate.first_name }} {{ candidate.last_name }}
+                        </div>
+                        <div style="font-size: 0.85rem; color: #6b7280;">
+                            Registrado: {{ candidate.user.date_joined|date:"d M Y" }}
+                        </div>
                     </td>
                     <td style="padding: 1rem;">
                         <div>{{ candidate.email }}</div>
