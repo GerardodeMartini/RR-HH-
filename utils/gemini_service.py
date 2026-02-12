@@ -168,3 +168,69 @@ def analyze_application(application_id):
         import traceback
         traceback.print_exc()
         return {"error": f"Error interno de IA: {str(e)}"}
+class CandidateExtractionSchema(BaseModel):
+    first_name: Optional[str] = Field(description="First name of the candidate")
+    last_name: Optional[str] = Field(description="Last name of the candidate")
+    email: Optional[str] = Field(description="Email address of the candidate")
+    phone: Optional[str] = Field(description="Phone number of the candidate")
+    skills: Optional[str] = Field(description="Comma-separated list of technical skills found")
+    missing_data_warnings: List[str] = Field(description="List of fields that could not be confidently extracted")
+
+def extract_candidate_data(file_path):
+    try:
+        api_key = get_api_key()
+        if not api_key:
+            return {"error": "API Key not configured."}
+
+        client = genai.Client(api_key=api_key)
+        
+        prompt = """
+        ERES UN ASISTENTE DE RRHH EXPERTO EN EXTRACCIÓN DE DATOS.
+        Tu tarea es extraer información estructurada del CV adjunto en español.
+        
+        Extrae los siguientes campos:
+        - Nombre (first_name)
+        - Apellido (last_name)
+        - Email (email): Si hay múltiples correos, únelos con comas.
+        - Teléfono (phone)
+        - Habilidades (skills): Lista separada por comas de habilidades técnicas relevantes.
+        
+        SI ALGÚN DATO NO ESTÁ CLARO O NO SE ENCUENTRA:
+        - Deja el campo como null o string vacío.
+        - Agrega una nota en 'missing_data_warnings' indicando qué campo falta (ej: "No se encontró número de teléfono").
+        """
+
+        if not os.path.exists(file_path):
+             return {"error": "Archivo no encontrado."}
+
+        # Upload file (using the same logic as analyze_application)
+        uploaded_file = client.files.upload(
+            file=file_path,
+            config=types.UploadFileConfig(mime_type='application/pdf')
+        )
+        
+        response = client.models.generate_content(
+            model='gemini-flash-latest',
+            contents=[
+                prompt,
+                types.Part.from_uri(
+                    file_uri=uploaded_file.uri,
+                    mime_type=uploaded_file.mime_type
+                )
+            ],
+            config=types.GenerateContentConfig(
+                response_mime_type='application/json',
+                response_schema=CandidateExtractionSchema
+            )
+        )
+        
+        if not response.text:
+             return {"error": "La IA no pudo procesar el archivo."}
+
+        # Return parsed data as dict
+        return json.loads(response.text)
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return {"error": f"Error de extracción: {str(e)}"}

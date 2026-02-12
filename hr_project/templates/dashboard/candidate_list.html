@@ -5,8 +5,14 @@
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
         <div>
             <h1 style="margin-bottom: 0.5rem;">Base de Talentos</h1>
-            <a href="{% url 'dashboard_home' %}" style="color: var(--text-muted); text-decoration: none;">&larr; Volver
-                al Panel</a>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <a href="{% url 'dashboard_home' %}" style="color: var(--text-muted); text-decoration: none;">&larr;
+                    Volver
+                    al Panel</a>
+                <a href="{% url 'add_candidate' %}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-plus"></i> Agregar Candidato
+                </a>
+            </div>
         </div>
         <div>
             <span
@@ -47,49 +53,48 @@
                         <div style="font-weight: 500; color: #111827;">
                             {{ candidate.first_name }} {{ candidate.last_name }}
                         </div>
-                        <div style="font-size: 0.85rem; color: #6b7280;">
-                            Registrado: {{ candidate.user.date_joined|date:"d M Y" }}
-                        </div>
-                    </td>
-                    <td style="padding: 1rem;">
-                        <div>{{ candidate.email }}</div>
-                        <div style="color: #6b7280; font-size: 0.9rem;">{{ candidate.phone|default:"-" }}</div>
-                    </td>
-                    <td style="padding: 1rem;">
-                        {% if candidate.skills %}
-                        <div style="max-width: 300px; font-size: 0.9rem;">{{ candidate.skills }}</div>
-                        {% else %}
-                        <span style="color: #9ca3af;">-</span>
-                        {% endif %}
-                    </td>
-                    <td style="padding: 1rem;">
-                        {% if candidate.resume_file %}
-                        <a href="{{ candidate.resume_file.url }}" target="_blank"
-                            style="color: #2563eb; font-weight: 500; text-decoration: none;">Ver CV 📄</a>
-                        {% else %}
-                        <span style="color: #9ca3af; font-size: 0.9rem;">Sin CV</span>
-                        {% endif %}
-                    </td>
-                    <td style="padding: 1rem;">
-                        {% if candidate.availability_status == 'active' %}
-                        <span
-                            style="background: #dcfce7; color: #166534; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.85rem; font-weight: 500;">Activo</span>
-                        {% else %}
-                        <span
-                            style="background: #f3f4f6; color: #4b5563; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.85rem; font-weight: 500;">No
-                            busca</span>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="5" style="padding: 3rem; text-align: center; color: #6b7280;">
-                        No hay candidatos registrados aún.
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                        Agregado: {{ candidate.created_at|date:"d M Y" }}
     </div>
+    </td>
+    <td style="padding: 1rem;">
+        <div>{{ candidate.email }}</div>
+        <div style="color: #6b7280; font-size: 0.9rem;">{{ candidate.phone|default:"-" }}</div>
+    </td>
+    <td style="padding: 1rem;">
+        {% if candidate.skills %}
+        <div style="max-width: 300px; font-size: 0.9rem;">{{ candidate.skills }}</div>
+        {% else %}
+        <span style="color: #9ca3af;">-</span>
+        {% endif %}
+    </td>
+    <td style="padding: 1rem;">
+        {% if candidate.resume_file %}
+        <a href="{{ candidate.resume_file.url }}" target="_blank"
+            style="color: #2563eb; font-weight: 500; text-decoration: none;">Ver CV 📄</a>
+        {% else %}
+        <span style="color: #9ca3af; font-size: 0.9rem;">Sin CV</span>
+        {% endif %}
+    </td>
+    <td style="padding: 1rem;">
+        {% if candidate.availability_status == 'active' %}
+        <span
+            style="background: #dcfce7; color: #166534; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.85rem; font-weight: 500;">Activo</span>
+        {% else %}
+        <span
+            style="background: #f3f4f6; color: #4b5563; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.85rem; font-weight: 500;">No
+            busca</span>
+        {% endif %}
+    </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="5" style="padding: 3rem; text-align: center; color: #6b7280;">
+            No hay candidatos registrados aún.
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+</div>
 </div>
 {% endblock %}

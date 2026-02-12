@@ -20,9 +20,10 @@ class Candidate(models.Model):
     last_name = models.CharField(max_length=100)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, related_name='candidate_profile')
     email = models.EmailField(unique=True)
+    secondary_email = models.CharField(max_length=255, blank=True, null=True, help_text="Correos secundarios separados por coma")
     phone = models.CharField(max_length=20, blank=True)
     resume_file = models.FileField(upload_to='resumes/', blank=True, null=True)
-    skills = models.TextField(blank=True, help_text="Comma-separated skills or description")
+    skills = models.TextField(blank=True, help_text="Habilidades separadas por coma o descripción breve")
     tags = models.ManyToManyField(Tag, blank=True, related_name='candidates')
     
     # Automation Fields

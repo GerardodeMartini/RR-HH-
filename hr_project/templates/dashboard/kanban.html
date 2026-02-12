@@ -1,48 +1,87 @@
 ﻿{% extends "base.html" %}
 {% load dashboard_extras %}
-<!-- WRITTEN VIA POWERSHELL -->
 
 {% block content %}
 <div class="container" style="max-width: 1400px;">
     <div style="margin-bottom: 2rem;">
         <a href="{% url 'dashboard_home' %}">&larr; Volver al Panel</a>
-        <h1 style="margin-top: 0.5rem;">Pipeline: {{ vacancy.title }}</h1>
+        <div class="d-flex justify-content-between align-items-center mt-2">
+            <h1 class="mb-0">Pipeline: {{ vacancy.title }}</h1>
+            {% if vacancy.status == 'active' %}
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#closeVacancyModal">
+                <i class="fas fa-archive me-2"></i>Cerrar Vacante
+            </button>
+            {% else %}
+            <span class="badge bg-secondary fs-6"><i class="fas fa-archive me-1"></i> Cerrada/Archivada</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Close Vacancy Modal -->
+    <div class="modal fade" id="closeVacancyModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i>Confirmar Cierre</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Estás seguro de que deseas cerrar la vacante <strong>{{ vacancy.title }}</strong>?</p>
+                    <p class="small text-muted">La vacante será archivada y desaparecerá del listado activo. Podrás
+                        consultarla luego en los filtros de historial.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <form action="{% url 'close_vacancy' vacancy.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Sí, Cerrar Vacante</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div style="display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 2rem;">
         {% for stage_name, display_name in stage_names.items %}
-            {% with apps=kanban_data|get_item:stage_name %}
-            <div style="min-width: 250px; background: #e2e8f0; border-radius: 8px; padding: 1rem;">
-                <h4 style="text-transform: uppercase; font-size: 0.8rem; color: var(--secondary-color); margin-top: 0;">{{ display_name }}</h4>
+        {% with apps=kanban_data|get_item:stage_name %}
+        <div style="min-width: 250px; background: #e2e8f0; border-radius: 8px; padding: 1rem;">
+            <h4 style="text-transform: uppercase; font-size: 0.8rem; color: var(--secondary-color); margin-top: 0;">
+                {{ display_name }}
+            </h4>
 
-                {% for app in apps %}
-                <div style="background: white; padding: 1rem; border-radius: 4px; margin-bottom: 0.5rem; box-shadow: 0 1px 2px rgba(0,0,0,0.1);">
-                    <strong>
-                        <a href="{% url 'application_detail' app.id %}" style="text-decoration: none; color: #334155;">{{ app.candidate.first_name }} {{ app.candidate.last_name }}</a>
-                    </strong>
+            {% for app in apps %}
+            <div
+                style="background: white; padding: 1rem; border-radius: 4px; margin-bottom: 0.5rem; box-shadow: 0 1px 2px rgba(0,0,0,0.1);">
+                <strong>
+                    <a href="{% url 'application_detail' app.id %}" style="text-decoration: none; color: #334155;">
+                        {{ app.candidate.first_name }} {{ app.candidate.last_name }}
+                    </a>
+                </strong>
 
-                    <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">
-                        Match: 
-                        <span style="font-weight: bold; color: {% if app.ai_match_score > 70 or app.match_score > 70 %}green{% else %}orange{% endif %};">
-                            {% if app.ai_match_score %}
-                                {{ app.ai_match_score }}% (IA)
-                            {% else %}
-                                {{ app.match_score }}%
-                            {% endif %}
-                        </span>
-                    </div>
-
-                    <div style="margin-top: 0.5rem; display: flex; flex-wrap: wrap; gap: 4px;">
-                        {% for tag in app.candidate.tags.all %}
-                        <span style="font-size: 0.7rem; background: #eff6ff; padding: 2px 6px; border-radius: 4px;">#{{ tag.name }}</span>
-                        {% endfor %}
-                    </div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">
+                    Match:
+                    <span
+                        style="font-weight: bold; color: {% if app.ai_match_score > 70 or app.match_score > 70 %}green{% else %}orange{% endif %};">
+                        {% if app.ai_match_score %}
+                        {{ app.ai_match_score }}% (IA)
+                        {% else %}
+                        {{ app.match_score }}%
+                        {% endif %}
+                    </span>
                 </div>
-                {% empty %}
-                <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem;">Sin candidatos</p>
-                {% endfor %}
+
+                <div style="margin-top: 0.5rem; display: flex; flex-wrap: wrap; gap: 4px;">
+                    {% for tag in app.candidate.tags.all %}
+                    <span style="font-size: 0.7rem; background: #eff6ff; padding: 2px 6px; border-radius: 4px;">#{{
+                        tag.name }}</span>
+                    {% endfor %}
+                </div>
             </div>
-            {% endwith %}
+            {% empty %}
+            <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem;">Sin candidatos</p>
+            {% endfor %}
+        </div>
+        {% endwith %}
         {% endfor %}
     </div>
 </div>

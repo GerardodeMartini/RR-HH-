@@ -1,0 +1,272 @@
+{% extends 'base.html' %}
+
+{% block title %}Agregar Candidato Manualmente - RRHH{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="fas fa-user-plus me-2"></i>Agregar Candidato Manualmente</h4>
+            </div>
+            <div class="card-body p-4">
+                <p class="text-muted mb-4">
+                    Utilice este formulario para agregar un candidato a la base de talentos.
+                    Puede subir un CV para autocompletar los datos con Inteligencia Artificial.
+                </p>
+
+                <!-- AI Analysis Section -->
+                <div class="mb-4 p-3 bg-light border rounded">
+                    <label class="form-label fw-bold text-primary"><i class="fas fa-magic me-2"></i>Autocompletar con
+                        IA</label>
+                    <div class="input-group">
+                        <input type="file" class="form-control" id="aiResumeInput" accept=".pdf">
+                        <button class="btn btn-primary" type="button" id="btnAnalyzeAI">
+                            <i class="fas fa-search me-1"></i> Analizar y Rellenar
+                        </button>
+                    </div>
+                    <div id="aiLoading" class="mt-2 text-muted small" style="display:none;">
+                        <i class="fas fa-spinner fa-spin me-1"></i> Analizando documento con IA (esto puede tomar unos
+                        segundos)...
+                    </div>
+                    <div id="aiError" class="mt-2 text-danger small" style="display:none;"></div>
+                    <div id="aiSuccess" class="mt-2 text-success small" style="display:none;">
+                        <i class="fas fa-check-circle me-1"></i> Datos extraídos correctamente.
+                    </div>
+                    <div id="aiWarnings" class="mt-2 text-warning small" style="display:none;"></div>
+                </div>
+
+                <hr class="my-4">
+
+                <!-- Duplicate Warning Alert -->
+                <div id="duplicateAlert" class="alert alert-warning alert-dismissible fade show" role="alert"
+                    style="display:none;">
+                    <strong><i class="fas fa-exclamation-triangle"></i> Posible Duplicado Detectado</strong>
+                    <p class="mb-2" id="duplicateMessage"></p>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-sm btn-warning" id="btnConfirmUpdate">
+                            <i class="fas fa-sync-alt"></i> Actualizar sus datos
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-dark" id="btnIgnoreDuplicate">
+                            <i class="fas fa-times"></i> Ignorar (Crear nuevo)
+                        </button>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+
+                <div id="updateModeIndicator" class="alert alert-info" style="display:none;">
+                    <strong><i class="fas fa-info-circle"></i> Modo Actualización:</strong> Se actualizarán los datos
+                    del candidato existente.
+                </div>
+
+                <form method="post" enctype="multipart/form-data" id="candidateForm">
+                    {% csrf_token %}
+                    <input type="hidden" name="existing_candidate_id" id="existingCandidateId">
+
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label fw-bold">
+                            {{ field.label }}
+                        </label>
+                        {{ field }}
+                        {% if field.help_text %}
+                        <div class="form-text">{{ field.help_text }}</div>
+                        {% endif %}
+                        {% for error in field.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <a href="{% url 'staff_candidate_list' %}" class="btn btn-outline-secondary">
+                            Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary" id="btnSubmit">
+                            <i class="fas fa-save me-2"></i>Guardar Candidato
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const btnAnalyze = document.getElementById('btnAnalyzeAI');
+        const fileInput = document.getElementById('aiResumeInput');
+
+        // AI Feedback Elements
+        const loading = document.getElementById('aiLoading');
+        const errorMsg = document.getElementById('aiError');
+        const successMsg = document.getElementById('aiSuccess');
+        const warningMsg = document.getElementById('aiWarnings');
+
+        // Duplicate Check Elements
+        const duplicateAlert = document.getElementById('duplicateAlert');
+        const duplicateMessage = document.getElementById('duplicateMessage');
+        const btnConfirmUpdate = document.getElementById('btnConfirmUpdate');
+        const btnIgnoreDuplicate = document.getElementById('btnIgnoreDuplicate');
+        const existingCandidateIdInput = document.getElementById('existingCandidateId');
+        const updateModeIndicator = document.getElementById('updateModeIndicator');
+        const btnSubmit = document.getElementById('btnSubmit');
+
+        let foundCandidateId = null;
+
+        // Map API fields to Form Input IDs based on standard Django ID generation
+        const fieldMap = {
+            'first_name': 'id_first_name',
+            'last_name': 'id_last_name',
+            'email': 'id_email',
+            'phone': 'id_phone',
+            'skills': 'id_skills'
+        };
+
+        // --- AI Autocomplete Logic ---
+        btnAnalyze.addEventListener('click', function () {
+            if (!fileInput.files.length) {
+                alert('Por favor seleccione un archivo PDF primero.');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append('resume', file);
+
+            // Reset UI
+            loading.style.display = 'block';
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'none';
+            warningMsg.style.display = 'none';
+            warningMsg.innerHTML = '';
+            btnAnalyze.disabled = true;
+
+            fetch('{% url "api_parse_resume" %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    loading.style.display = 'none';
+                    btnAnalyze.disabled = false;
+
+                    if (data.success) {
+                        const result = data.data;
+                        successMsg.style.display = 'block';
+
+                        // Populate fields
+                        for (const [key, fieldId] of Object.entries(fieldMap)) {
+                            if (result[key]) {
+                                const input = document.getElementById(fieldId);
+                                if (input) {
+                                    input.value = result[key];
+                                    // Trigger duplicate check after auto-fill
+                                    if (key === 'email' || key === 'last_name') {
+                                        checkDuplicate();
+                                    }
+                                }
+                            }
+                        }
+
+                        // Handle warnings
+                        if (result.missing_data_warnings && result.missing_data_warnings.length > 0) {
+                            warningMsg.style.display = 'block';
+                            let warningHtml = '<strong><i class="fas fa-exclamation-triangle"></i> Advertencia:</strong> Algunos datos no pudieron ser encontrados:<ul class="mb-0 ps-3">';
+                            result.missing_data_warnings.forEach(w => {
+                                warningHtml += `<li>${w}</li>`;
+                            });
+                            warningHtml += '</ul>';
+                            warningMsg.innerHTML = warningHtml;
+                        }
+
+                        // Copy file to main input
+                        const mainFileInput = document.getElementById('id_resume_file');
+                        if (mainFileInput) {
+                            mainFileInput.files = fileInput.files;
+                        }
+
+                    } else {
+                        errorMsg.textContent = 'Error: ' + (data.error || 'No se pudo analizar el CV.');
+                        errorMsg.style.display = 'block';
+                    }
+                })
+                .catch(err => {
+                    loading.style.display = 'none';
+                    btnAnalyze.disabled = false;
+                    errorMsg.textContent = 'Error de conexión con el servidor.';
+                    errorMsg.style.display = 'block';
+                    console.error(err);
+                });
+        });
+
+        // --- Duplicate Detection Logic ---
+
+        function checkDuplicate() {
+            const email = document.getElementById('id_email').value;
+            const firstName = document.getElementById('id_first_name').value;
+            const lastName = document.getElementById('id_last_name').value;
+
+            // Only check if we have email OR specific name combination
+            if (!email && (!firstName || !lastName)) return;
+
+            // Don't check if we are already in update mode for THIS candidate
+            if (existingCandidateIdInput.value && foundCandidateId == existingCandidateIdInput.value) return;
+
+            const params = new URLSearchParams({
+                email: email,
+                first_name: firstName,
+                last_name: lastName
+            });
+
+            fetch(`{% url "api_check_candidate" %}?${params.toString()}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.exists) {
+                        const match = data.matches[0]; // Take first match
+                        foundCandidateId = match.id;
+
+                        duplicateMessage.innerHTML = `
+                            Se encontró un candidato existente: <strong>${match.name}</strong> (${match.email})<br>
+                            Motivo: ${match.reason}. <br>
+                            ¿Desea actualizar su ficha con los nuevos datos?
+                        `;
+                        duplicateAlert.style.display = 'block';
+                    } else {
+                        duplicateAlert.style.display = 'none';
+                        foundCandidateId = null;
+                    }
+                })
+                .catch(err => console.error("Error checking duplicate:", err));
+        }
+
+        // Add listeners to fields
+        document.getElementById('id_email').addEventListener('blur', checkDuplicate);
+        document.getElementById('id_last_name').addEventListener('blur', checkDuplicate);
+
+        // Handle Duplicate Actions
+        btnConfirmUpdate.addEventListener('click', function () {
+            if (foundCandidateId) {
+                existingCandidateIdInput.value = foundCandidateId;
+                duplicateAlert.style.display = 'none';
+                updateModeIndicator.style.display = 'block';
+                btnSubmit.innerHTML = '<i class="fas fa-sync-alt me-2"></i>Actualizar Candidato';
+                btnSubmit.classList.remove('btn-primary');
+                btnSubmit.classList.add('btn-warning');
+            }
+        });
+
+        btnIgnoreDuplicate.addEventListener('click', function () {
+            duplicateAlert.style.display = 'none';
+            existingCandidateIdInput.value = ''; // Ensure we create new
+            updateModeIndicator.style.display = 'none';
+            btnSubmit.innerHTML = '<i class="fas fa-save me-2"></i>Guardar Candidato';
+            btnSubmit.classList.remove('btn-warning');
+            btnSubmit.classList.add('btn-primary');
+        });
+    });
+</script>
+{% endblock %}

@@ -2,14 +2,89 @@ from django import forms
 from .models import Candidate
 
 class CandidateProfileForm(forms.ModelForm):
+    # Override email to be CharField to accept multiple emails
+    email = forms.CharField(
+        label='Correo Electrónico',
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'ej: usuario@mail.com, otro@mail.com'}),
+        help_text="Puede ingresar múltiples correos separados por coma."
+    )
+
     class Meta:
         model = Candidate
         fields = ['first_name', 'last_name', 'email', 'phone', 'resume_file', 'skills']
+        labels = {
+            'first_name': 'Nombre',
+            'last_name': 'Apellido',
+            'phone': 'Teléfono',
+            'resume_file': 'Currículum (CV)',
+            'skills': 'Habilidades / Skills',
+        }
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
             'resume_file': forms.FileInput(attrs={'class': 'form-control'}),
             'skills': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Python, SQL, Django...'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        instance = kwargs.get('instance')
+        if instance and instance.pk:
+            initial = kwargs.get('initial', {})
+            # Combine primary and secondary emails for display
+            emails = [instance.email]
+            if instance.secondary_email:
+                # Split secondary emails by comma and clean whitespace
+                secondaries = [e.strip() for e in instance.secondary_email.split(',') if e.strip()]
+                emails.extend(secondaries)
+            initial['email'] = ', '.join(emails)
+            kwargs['initial'] = initial
+        super().__init__(*args, **kwargs)
+
+    def clean_email(self):
+        email_input = self.cleaned_data.get('email')
+        if not email_input:
+            raise forms.ValidationError("Este campo es obligatorio.")
+        
+        # Split by comma
+        emails = [e.strip() for e in email_input.split(',') if e.strip()]
+        
+        # Validate each email
+        from django.core.validators import validate_email
+        from django.core.exceptions import ValidationError
+        
+        for e in emails:
+            try:
+                validate_email(e)
+            except ValidationError:
+                raise forms.ValidationError(f"'{e}' no es una dirección de correo válida.")
+        
+        # Check uniqueness of the PRIMARY email (the first one)
+        primary_email = emails[0]
+        
+        # Exclude self if updating
+        qs = Candidate.objects.filter(email__iexact=primary_email)
+        if self.instance and self.instance.pk:
+            qs = qs.exclude(pk=self.instance.pk)
+            
+        if qs.exists():
+            raise forms.ValidationError(f"El correo principal '{primary_email}' ya está registrado.")
+            
+        return email_input
+
+    def save(self, commit=True):
+        candidate = super().save(commit=False)
+        
+        # Split email input
+        email_input = self.cleaned_data.get('email')
+        emails = [e.strip() for e in email_input.split(',') if e.strip()]
+        
+        if emails:
+            candidate.email = emails[0] # Primary
+            candidate.secondary_email = ', '.join(emails[1:]) # Rest
+        
+        if commit:
+            candidate.save()
+            self.save_m2m()
+            
+        return candidate
