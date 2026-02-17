@@ -20,6 +20,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from .views import custom_logout
 
+# Force reload for URL updates
 urlpatterns = [
     path('admin/', admin.site.urls),  # Django Admin
     path('logout/', custom_logout, name='logout'),

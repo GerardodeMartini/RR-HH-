@@ -25,7 +25,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from applications.models import Application
-from .forms import CandidateProfileForm
+from .forms import CandidateProfileForm, CandidateRegisterForm
 
 def candidate_login(request):
     if request.method == 'POST':
@@ -40,19 +40,19 @@ def candidate_login(request):
 
 def candidate_register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CandidateRegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
             # Link candidate profile to user
             Candidate.objects.create(
                 user=user, 
-                email=user.email,  # UserCreationForm doesn't save email by default unless customized, but for MVP use what we have or just empty
+                email=user.email,
                 first_name=user.username
             )
             login(request, user)
             return redirect('candidate_dashboard')
     else:
-        form = UserCreationForm()
+        form = CandidateRegisterForm()
     return render(request, 'candidates/register.html', {'form': form})
 
 @login_required

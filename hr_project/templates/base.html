@@ -51,7 +51,7 @@
                 <span style="margin-right: 1rem; color: var(--text-muted); font-size: 0.9rem;">Hola, {{ user }}</span>
 
                 {% if user.company_profile %}
-                <a href="{% url 'client_portal' %}">Mi Portal</a>
+                <a href="{% url 'client_portal' %}">Empresas</a>
                 {% elif user.candidate_profile %}
                 <a href="{% url 'candidate_dashboard' %}">Mi Panel</a>
                 {% elif user.is_staff %}

@@ -1,20 +1,29 @@
 /* Corporate Design System */
 :root {
-    /* Palette */
+    /* Palette - Modern & Serious */
     --primary-color: #0f172a;
-    /* Deep Navy */
+    /* Deep Navy (Slate-900) - Authority & Trust */
     --secondary-color: #334155;
-    /* Slate */
-    --accent-color: #2563eb;
-    /* Royal Blue */
-    --accent-hover: #1d4ed8;
-    --bg-color: #f8fafc;
-    /* Off-white */
+    /* Slate-700 - Professional Text */
+    --accent-color: #4f46e5;
+    /* Indigo-600 - Modern, vibrant but serious */
+    --accent-hover: #4338ca;
+    /* Indigo-700 */
+
+    --bg-color: #f1f5f9;
+    /* Slate-100 - Structured, not stark white */
     --card-bg: #ffffff;
+    /* Pure white for content focus */
+
     --text-main: #1e293b;
+    /* Slate-800 - High legibility */
     --text-muted: #64748b;
+    /* Slate-500 */
+
     --success: #10b981;
-    --border-color: #e2e8f0;
+    /* Emerald-500 */
+    --border-color: #cbd5e1;
+    /* Slate-300 - Slightly more definition */
 
     /* Typography */
     --font-main: 'Inter', system-ui, -apple-system, sans-serif;
@@ -58,11 +67,14 @@ a {
 }
 
 /* Header */
+/* Header */
 header {
-    background: var(--card-bg);
-    border-bottom: 1px solid var(--border-color);
+    background: var(--primary-color);
+    /* Dark Header for contrast */
+    border-bottom: 1px solid var(--primary-color);
     padding: 1rem 0;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    color: white;
 }
 
 header .container {
@@ -75,7 +87,8 @@ header .container {
 .logo {
     font-size: 1.5rem;
     font-weight: 800;
-    color: var(--primary-color);
+    color: white;
+    /* White logo on dark header */
     letter-spacing: -0.5px;
 }
 
@@ -87,28 +100,33 @@ header .container {
 
 .nav-links a {
     margin-left: 0;
-    color: var(--secondary-color);
+    color: #e2e8f0;
+    /* Light text for dark header */
     font-weight: 500;
+    transition: color 0.2s;
 }
 
 .nav-links a:hover {
-    color: var(--accent-color);
+    color: white;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
 .btn-nav {
-    border: 1px solid var(--border-color);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     padding: 0.5rem 1rem;
-    border-radius: 4px;
-    background: transparent;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    /* Glassy effect */
     cursor: pointer;
     font-size: 0.9rem;
-    color: var(--text-main);
+    color: white;
     transition: all 0.2s;
 }
 
 .btn-nav:hover {
-    border-color: var(--accent-color);
-    color: var(--accent-color);
+    background: rgba(255, 255, 255, 0.15);
+    border-color: white;
+    color: white;
 }
 
 /* Buttons */
@@ -209,7 +227,8 @@ input:focus,
 textarea:focus {
     outline: none;
     border-color: var(--accent-color);
-    ring: 2px solid #bfdbfe;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+    /* Indigo-Ring */
 }
 
 /* Footer */

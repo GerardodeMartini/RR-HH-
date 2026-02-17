@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from .models import Vacancy, Company
-from .forms import VacancyForm, CompanyProfileForm
+from .forms import VacancyForm, CompanyProfileForm, CompanyRegisterForm
 from applications.models import Application
 from candidates.models import Candidate
 
@@ -11,7 +11,20 @@ class CompanyLoginView(LoginView):
     redirect_authenticated_user = True
     
     def get_success_url(self):
-        return '/portal/'
+        return '/empresas/'
+
+def company_register(request):
+    if request.method == 'POST':
+        form = CompanyRegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            # Login immediately
+            from django.contrib.auth import login
+            login(request, user)
+            return redirect('client_portal')
+    else:
+        form = CompanyRegisterForm()
+    return render(request, 'clients/register.html', {'form': form})
 
 def check_company_profile(user):
     return hasattr(user, 'company_profile')

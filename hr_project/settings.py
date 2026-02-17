@@ -33,7 +33,12 @@ DEBUG = os.getenv('DEBUG') == 'True'
 # GOOGLE GEMINI AI KEY
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1']
+
+# CLOUDFLARE TURNSTILE (Test Keys)
+# Always passes: 1x00000000000000000000AA / 1x0000000000000000000000000000000AA
+TURNSTILE_SITE_KEY = os.getenv('TURNSTILE_SITE_KEY', '1x00000000000000000000AA')
+TURNSTILE_SECRET_KEY = os.getenv('TURNSTILE_SECRET_KEY', '1x0000000000000000000000000000000AA')
 
 
 # Application definition
@@ -114,7 +119,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es'
 
 TIME_ZONE = 'UTC'
 
@@ -129,6 +134,22 @@ USE_TZ = True
 STATIC_URL = 'static/'
 LOGIN_REDIRECT_URL = '/admin/'
 LOGIN_URL = '/admin/login/'
+
+# Email Configuration (SMTP)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@tudominio.com')
+
+# Security Settings
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]

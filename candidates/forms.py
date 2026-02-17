@@ -1,5 +1,8 @@
 from django import forms
 from .models import Candidate
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from utils.turnstile import TurnstileField
 
 class CandidateProfileForm(forms.ModelForm):
     # Override email to be CharField to accept multiple emails
@@ -88,3 +91,36 @@ class CandidateProfileForm(forms.ModelForm):
             self.save_m2m()
             
         return candidate
+
+class CandidateRegisterForm(UserCreationForm):
+    turnstile = TurnstileField()
+
+    username = forms.CharField(label='Usuario', max_length=20, help_text='Requerido. 20 caracteres o menos. Letras, dígitos y @/./+/-/_ solamente.')
+
+    class Meta(UserCreationForm.Meta):
+        model = User
+        fields = ('username', 'email')
+        labels = {
+            'username': 'Usuario',
+            'email': 'Correo Electrónico',
+        }
+        help_texts = {
+            'username': 'Requerido. 20 caracteres o menos. Letras, dígitos y @/./+/-/_ solamente.',
+            'email': 'Dirección de correo válida.',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Force Spanish labels for password fields from UserCreationForm
+        self.fields['username'].label = "Usuario"
+        self.fields['email'].label = "Correo Electrónico" 
+        self.fields['email'].required = True
+        
+        # Check if fields exist before accessing (UserCreationForm standard fields)
+        if 'password1' in self.fields:
+            self.fields['password1'].label = "Contraseña"
+            self.fields['password1'].help_text = "La contraseña debe tener al menos 8 caracteres y no ser demasiado común."
+        
+        if 'password2' in self.fields:
+            self.fields['password2'].label = "Confirmar contraseña"
+            self.fields['password2'].help_text = "Ingresa la misma contraseña para verificar."

@@ -8,13 +8,20 @@
 
     <form method="POST">
         {% csrf_token %}
-        <!-- Simple rendering of django form -->
+
         {% for field in form %}
-        <div class="form-group" style="text-align: left;">
-            <label>{{ field.label }}</label>
+        <div class="form-group" style="text-align: left; margin-bottom: 1rem;">
+            <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">
+                {{ field.label }}
+            </label>
             {{ field }}
+            {% if field.help_text %}
+            <small style="color: #6b7280; display: block; margin-top: 0.25rem;">{{ field.help_text }}</small>
+            {% endif %}
             {% if field.errors %}
-            <div style="color: red; font-size: 0.8rem;">{{ field.errors }}</div>
+            <div style="color: #ef4444; font-size: 0.8rem; margin-top: 0.25rem;">
+                {{ field.errors }}
+            </div>
             {% endif %}
         </div>
         {% endfor %}
