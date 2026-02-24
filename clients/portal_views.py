@@ -6,12 +6,23 @@ from .forms import VacancyForm, CompanyProfileForm, CompanyRegisterForm
 from applications.models import Application
 from candidates.models import Candidate
 
+from utils.turnstile import validate_turnstile
+from django.contrib import messages
+
 class CompanyLoginView(LoginView):
     template_name = 'clients/login.html'
     redirect_authenticated_user = True
     
     def get_success_url(self):
         return '/empresas/'
+
+    def post(self, request, *args, **kwargs):
+        turnstile_result = validate_turnstile(request)
+        if not turnstile_result.get('success'):
+            messages.error(request, 'Error de verificación de seguridad (Captcha). Por favor, intenta de nuevo.')
+            return render(request, self.template_name, {'form': self.get_form()})
+            
+        return super().post(request, *args, **kwargs)
 
 def company_register(request):
     if request.method == 'POST':

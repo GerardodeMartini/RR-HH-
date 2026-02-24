@@ -16,6 +16,13 @@
             <label>Contraseña</label>
             <input type="password" name="password" required>
         </div>
+
+        <!-- Cloudflare Turnstile -->
+        <div style="margin: 1.5rem 0; display: flex; justify-content: center;">
+            <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+            <div class="cf-turnstile" data-sitekey="{{ TURNSTILE_SITE_KEY }}" data-theme="light"></div>
+        </div>
+
         <button type="submit" class="btn btn-primary" style="width: 100%;">Ingresar</button>
     </form>
 </div>

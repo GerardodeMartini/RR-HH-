@@ -12,12 +12,23 @@ def is_recruiter(user):
 
 from django.urls import reverse_lazy
 
+from django.contrib import messages
+from utils.turnstile import validate_turnstile
+
 class RecruiterLoginView(auth_views.LoginView):
     template_name = 'dashboard/login.html'
     redirect_authenticated_user = True
     
     def get_success_url(self):
         return reverse_lazy('dashboard_home')
+
+    def post(self, request, *args, **kwargs):
+        turnstile_result = validate_turnstile(request)
+        if not turnstile_result.get('success'):
+            messages.error(request, 'Error de verificación de seguridad (Captcha). Por favor, intenta de nuevo.')
+            return render(request, self.template_name, {'form': self.get_form()})
+            
+        return super().post(request, *args, **kwargs)
         
 from candidates.forms import CandidateProfileForm
 
