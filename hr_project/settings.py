@@ -161,6 +161,13 @@ CSRF_COOKIE_SECURE = not DEBUG
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 
+if not DEBUG:
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    # SECURE_SSL_REDIRECT = True # Commented out by default in case Coolify handles it to prevent loops
+
+
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
