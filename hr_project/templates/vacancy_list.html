@@ -2,9 +2,36 @@
 
 {% block content %}
 <div style="text-align: center; max-width: 700px; margin: 0 auto 4rem auto;">
-    <h1>Unete al Futuro</h1>
-    <p style="font-size: 1.25rem; color: var(--text-muted);">Explora nuestras oportunidades laborales exclusivas.
-        Conectamos el mejor talento con empresas líderes.</p>
+    <div class="rotating-text-container">
+        <span class="rotating-text" id="changingText">Conectamos el mejor talento con empresas líderes.</span>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const phrases = [
+                "Conectamos el mejor talento con empresas líderes.",
+                "Vinculando tu capital humano con los resultados.",
+                "El puente directo entre el talento y las oportunidades.",
+                "Engranando equipos humanos de alto rendimiento.",
+                "Atrayendo y fidelizando el talento que te hará crecer.",
+                "Guiando a las personas hacia su máximo potencial."
+            ];
+            let currentIndex = 0;
+            const textElement = document.getElementById('changingText');
+
+            setInterval(() => {
+                // Iniciar desvanecimiento (Fade out)
+                textElement.style.opacity = 0;
+                
+                // Esperar a que se desvanezca, cambiar el texto y reaparecer (Fade in)
+                setTimeout(() => {
+                    currentIndex = (currentIndex + 1) % phrases.length;
+                    textElement.textContent = phrases[currentIndex];
+                    textElement.style.opacity = 1;
+                }, 500); // Medio segundo para coincidir con la transición CSS
+            }, 3500); // Cambiar frase cada 3.5 segundos
+        });
+    </script>
 </div>
 
 <div class="vacancy-grid">

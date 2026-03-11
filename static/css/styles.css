@@ -1,4 +1,19 @@
 /* Corporate Design System */
+
+/* Rotating Text in Body */
+.rotating-text-container {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    min-height: 2.5rem; /* Reserve space to prevent layout shifting */
+    margin: 1rem 0;
+}
+
+.rotating-text {
+    transition: opacity 0.5s ease-in-out;
+    opacity: 1;
+    display: inline-block;
+}
+
 :root {
     /* Palette - Modern Pastel Greens */
     --primary-color: #1a3c34;
@@ -10,7 +25,7 @@
     --accent-hover: #71b88e;
     /* Pastel Green Darker */
 
-    --bg-color: #f7faf8;
+    --bg-color: #f7faf9;         /* Sophisticated Pastel Mint-Green */
     /* Off-white Mint - Structured, not stark white */
     --card-bg: #ffffff;
     /* Pure white for content focus */
@@ -68,20 +83,58 @@ a {
 
 /* Header */
 /* Header */
-header {
-    background: var(--primary-color);
-    /* Dark Header for contrast */
-    border-bottom: 1px solid var(--primary-color);
-    padding: 1rem 0;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    color: white;
+/* Top Navigation Bar */
+.top-nav {
+    background: #f8fafc; /* Very light slate 50 */
+    border-bottom: 1px solid #e2e8f0;
+    padding: 8px 0;
+    width: 100%;
 }
 
-header .container {
+.top-nav-container {
+    padding: 0 40px;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end; /* Move all links to the right */
+}
+
+/* Header Main Content (Logo & Tagline) */
+header {
+    background: #f1f5f9;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 1rem 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+}
+
+.header-main-content {
+    display: flex;
     align-items: center;
-    flex-wrap: wrap;
+    width: 100%;
+    padding: 0 40px;
+    position: relative;
+}
+
+.logo-left {
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s;
+    text-decoration: none;
+}
+
+.logo-left:hover {
+    transform: scale(1.02);
+}
+
+.header-tagline {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.8rem; /* Increased size */
+    font-weight: 800;
+    color: #1d4e89; /* Matches the dark blue of the logo arrows/figures */
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin: 0;
+    pointer-events: none;
 }
 
 .logo {
@@ -94,39 +147,58 @@ header .container {
 
 .nav-links {
     display: flex;
-    gap: 1.5rem;
+    gap: 2rem;
     align-items: center;
 }
 
 .nav-links a {
-    margin-left: 0;
-    color: #e2e8f0;
-    /* Light text for dark header */
+    color: #64748b;
     font-weight: 500;
+    font-size: 0.9rem;
+    text-decoration: none;
     transition: color 0.2s;
 }
 
 .nav-links a:hover {
-    color: white;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    color: #1e293b;
+}
+
+.logout-btn-small {
+    background: none;
+    border: 1px solid #cbd5e1;
+    color: #64748b;
+    padding: 4px 12px;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.logout-btn-small:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+    border-color: #94a3b8;
+}
+
+.nav-links a:hover {
+    color: var(--primary-color);
 }
 
 .btn-nav {
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid var(--border-color);
     padding: 0.5rem 1rem;
     border-radius: 6px;
-    background: rgba(255, 255, 255, 0.05);
-    /* Glassy effect */
+    background: white;
     cursor: pointer;
     font-size: 0.9rem;
-    color: white;
+    color: var(--secondary-color);
     transition: all 0.2s;
 }
 
 .btn-nav:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: white;
-    color: white;
+    background: var(--bg-color);
+    border-color: var(--accent-color);
+    color: var(--primary-color);
 }
 
 /* Buttons */

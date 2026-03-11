@@ -14,7 +14,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=10.0">
     <style>
         .alert-success {
             background: #dcfce7;
@@ -43,12 +43,11 @@
 </head>
 
 <body>
-    <header>
-        <div class="container">
-            <a href="/" class="logo">MZ Recursos Humanos</a>
+    <div class="top-nav">
+        <div class="top-nav-container">
             <nav class="nav-links">
                 {% if user.is_authenticated %}
-                <span style="margin-right: 1rem; color: var(--text-muted); font-size: 0.9rem;">Hola, {{ user }}</span>
+                <span style="margin-right: 1rem; color: #64748b; font-size: 0.85rem;">Hola, {{ user }}</span>
 
                 {% if user.company_profile %}
                 <a href="{% url 'client_portal' %}">Empresas</a>
@@ -60,15 +59,35 @@
 
                 <form action="{% url 'logout' %}" method="post" style="display:inline;">
                     {% csrf_token %}
-                    <button type="submit" class="btn-nav">Cerrar Sesión</button>
+                    <button type="submit" class="logout-btn-small">Cerrar Sesión</button>
                 </form>
+                
+                <!-- Contact Button (Authenticated) -->
+                <a href="https://wa.me/5492336454547" target="_blank" style="display: flex; align-items: center; gap: 4px; color: #10b981; font-weight: 600;">
+                    <i class="fab fa-whatsapp"></i> Contacto
+                </a>
+
                 {% else %}
                 <a href="/">Oportunidades</a>
                 <a href="/candidates/login/">Soy Candidato</a>
                 <a href="{% url 'client_login' %}">Soy Empresa</a>
-                <a href="{% url 'dashboard_login' %}" class="btn-nav">Acceso Staff</a>
+                <a href="{% url 'dashboard_login' %}" class="logout-btn-small">Acceso Staff</a>
+                
+                <!-- Contact Button (Guest) -->
+                <a href="https://wa.me/5492336454547" target="_blank" style="display: flex; align-items: center; gap: 4px; color: #10b981; font-weight: 600;">
+                    <i class="fab fa-whatsapp"></i> Contacto
+                </a>
                 {% endif %}
             </nav>
+        </div>
+    </div>
+
+    <header>
+        <div class="header-main-content">
+            <a href="/" class="logo-left">
+                <img src="{% static 'img/logo-color-transparent.png' %}" alt="MZ Recursos Humanos" style="max-height: 200px; width: auto;">
+            </a>
+            <div class="header-tagline">Unete al Futuro</div>
         </div>
     </header>
 
@@ -97,9 +116,8 @@
 
                 <div class="footer-col">
                     <h4>Contacto</h4>
-                    <p><strong>Dirección:</strong><br>Santa Fe y Formosa<br>Huinca Renancó, Córdoba</p>
-                    <p><strong>WhatsApp:</strong><br><a href="https://wa.me/5492336496702" target="_blank"
-                            style="color: var(--secondary-color);">+54 9 2336 49-6702</a></p>
+                    <p><strong>WhatsApp:</strong><br><a href="https://wa.me/5492336454547" target="_blank"
+                            style="color: var(--secondary-color);">+54 9 2336 454547</a></p>
                     <!-- <p><strong>Email:</strong><br>[Email aquí]</p> -->
                 </div>
             </div>
