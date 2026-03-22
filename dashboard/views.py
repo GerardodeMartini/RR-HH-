@@ -279,3 +279,19 @@ def parse_resume_view(request):
             return JsonResponse({'success': False, 'error': str(e)})
             
     return JsonResponse({'success': False, 'error': 'No file uploaded'})
+
+@login_required
+@user_passes_test(is_recruiter)
+def dashboard_settings(request):
+    from .models import SystemSettings
+    settings_obj, created = SystemSettings.objects.get_or_create(id=1)
+    
+    if request.method == 'POST':
+        api_key = request.POST.get('api_key')
+        if api_key:
+            settings_obj.gemini_api_key = api_key
+            settings_obj.save()
+            messages.success(request, 'Configuración guardada correctamente.')
+            return redirect('dashboard_settings')
+            
+    return render(request, 'dashboard/settings.html', {'settings': settings_obj})
