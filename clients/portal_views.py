@@ -34,18 +34,43 @@ def company_register(request):
         form = CompanyRegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
+            user.is_active = False # Deactivate until email verification
+            user.save()
             
-            # Send Welcome Email
-            if hasattr(user, 'company_profile'):
-                send_company_welcome(user.company_profile)
-                
-            # Login immediately
-            from django.contrib.auth import login
-            login(request, user)
-            return redirect('client_portal')
+            from utils.emails import send_activation_email
+            send_activation_email(request, user, 'activate_company')
+            
+            messages.info(request, "¡Registro casi completo! Te hemos enviado un correo electrónico con un enlace para verificar tu cuenta de empresa. Por favor, revisa tu bandeja de entrada (y la carpeta de Spam) para activarla y poder iniciar sesión.")
+            return redirect('client_login')
     else:
         form = CompanyRegisterForm()
     return render(request, 'clients/register.html', {'form': form})
+
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_str
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.models import User
+
+def activate_company(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        user.is_active = True
+        user.save()
+        
+        if hasattr(user, 'company_profile'):
+            from utils.emails import send_company_welcome
+            send_company_welcome(user.company_profile)
+            
+        messages.success(request, "¡Cuenta de empresa activada exitosamente! Ya puedes iniciar sesión.")
+        return redirect('client_login')
+    else:
+        messages.error(request, "El enlace de activación es inválido o ha caducado. Es posible que tu cuenta ya haya sido activada.")
+        return redirect('client_login')
 
 def check_company_profile(user):
     return hasattr(user, 'company_profile')

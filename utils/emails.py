@@ -78,6 +78,29 @@ def send_stylized_email(subject, to_email, html_content):
         print(f"SMTP Error: {e}")
         return False
 
+# ----- VERIFICACION Y TOKENS -----
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
+from django.urls import reverse
+
+def send_activation_email(request, user, namespace_activate):
+    """
+    namespace_activate: e.g. 'activate_candidate' or 'activate_company'
+    """
+    token = default_token_generator.make_token(user)
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    
+    relative_link = reverse(namespace_activate, kwargs={'uidb64': uid, 'token': token})
+    activation_link = request.build_absolute_uri(relative_link)
+    
+    subject = "Confirma tu cuenta en RRHH MARINA"
+    title = f"¡Hola {user.username}!"
+    message = "Para garantizar la seguridad de nuestra plataforma y activar tu perfil, necesitamos que confirmes tu dirección de correo electrónico haciendo clic en el botón de abajo."
+    
+    html = get_base_html(title, message, "Activar mi Cuenta", activation_link)
+    send_stylized_email(subject, user.email, html)
+
 # ----- CANDIDATOS -----
 def send_candidate_welcome(candidate):
     subject = "¡Bienvenido a RRHH MARINA!"

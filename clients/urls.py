@@ -12,6 +12,7 @@ urlpatterns = [
     path('empresas/vacancy/<int:vacancy_id>/', portal_views.client_vacancy_view, name='client_vacancy_view'),
     path('empresas/login/', portal_views.CompanyLoginView.as_view(), name='client_login'),
     path('empresas/register/', portal_views.company_register, name='client_register'),
+    path('empresas/activate/<uidb64>/<token>/', portal_views.activate_company, name='activate_company'),
     path('empresas/create-vacancy/', portal_views.create_vacancy, name='create_vacancy'),
     path('empresas/profile/', portal_views.company_profile, name='company_profile'),
     path('empresas/talent-pool/', portal_views.talent_pool, name='talent_pool'),

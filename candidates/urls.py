@@ -7,5 +7,6 @@ urlpatterns = [
     # Portal Auth
     path('login/', views.candidate_login, name='candidate_login'),
     path('register/', views.candidate_register, name='candidate_register'),
+    path('activate/<uidb64>/<token>/', views.activate_candidate, name='activate_candidate'),
     path('dashboard/', views.candidate_dashboard, name='candidate_dashboard'),
 ]
