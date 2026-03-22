@@ -37,9 +37,12 @@ GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 ALLOWED_HOSTS_ENV = os.getenv('ALLOWED_HOSTS', '*,localhost,127.0.0.1')
 ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS_ENV.split(',')]
 
-CSRF_TRUSTED_ORIGINS_ENV = os.getenv('CSRF_TRUSTED_ORIGINS', '')
+CSRF_TRUSTED_ORIGINS_ENV = os.getenv('CSRF_TRUSTED_ORIGINS', 'https://zubianirrhh.com.ar,https://www.zubianirrhh.com.ar')
 if CSRF_TRUSTED_ORIGINS_ENV:
     CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in CSRF_TRUSTED_ORIGINS_ENV.split(',')]
+
+# Fix para proxies inversos de Coolify manejando HTTPS
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # CLOUDFLARE TURNSTILE (Test Keys)
 # Always passes: 1x00000000000000000000AA / 1x0000000000000000000000000000000AA
@@ -146,14 +149,14 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 LOGIN_REDIRECT_URL = '/admin/'
 LOGIN_URL = '/admin/login/'
 
-# Email Configuration (SMTP for AWS SES)
+# Email Configuration (SMTP for Brevo)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = os.getenv('EMAIL_HOST', 'email-smtp.us-east-2.amazonaws.com') # Replace with your SES region
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp-relay.brevo.com')
 EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
 EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER') # IMPORTANT: This must be the SMTP credential, NOT the IAM access key
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@tudominio.com') # Must be a verified identity in SES
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER') # Login de SMTP de Brevo
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD') # Master Password o SMTP key de Brevo
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@tudominio.com') # Remitente verificado en Brevo
 
 # Security Settings
 SESSION_COOKIE_SECURE = not DEBUG
