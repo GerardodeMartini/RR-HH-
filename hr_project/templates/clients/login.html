@@ -23,8 +23,13 @@
 
         <div style="margin-bottom: 1.5rem;">
             <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Contraseña</label>
-            <input type="password" name="password" class="form-control"
-                style="width: 100%; padding: 0.6rem; border: 1px solid #d1d5db; border-radius: 6px;" required>
+            <div style="position: relative;">
+                <input type="password" name="password" id="id_password" class="form-control"
+                    style="width: 100%; padding: 0.6rem; padding-right: 2.5rem; border: 1px solid #d1d5db; border-radius: 6px;" required>
+                <button type="button" onclick="togglePasswordVisibility('id_password', this)" tabindex="-1" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #6b7280; cursor: pointer; padding: 0;">
+                    <i class="fa-regular fa-eye"></i>
+                </button>
+            </div>
         </div>
 
         <!-- Cloudflare Turnstile -->

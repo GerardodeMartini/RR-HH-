@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ subject|default:"MZ Recursos Humanos" }}</title>
+    <style>
+        body { margin: 0; padding: 0; background-color: #f8fafc; font-family: 'Inter', Helvetica, Arial, sans-serif; color: #334155; }
+        .wrapper { width: 100%; table-layout: fixed; background-color: #f8fafc; padding-bottom: 40px; }
+        .webkit { max-width: 600px; background-color: #ffffff; margin: 0 auto; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-top: 40px; }
+        .header { background-color: #ffffff; padding: 20px; text-align: center; border-bottom: 1px solid #e2e8f0; }
+        .header h2 { color: #10b981; margin: 0; font-weight: 700; letter-spacing: -0.5px; }
+        .header p { color: #64748b; font-size: 14px; margin: 5px 0 0 0; font-weight: 500;}
+        .content { padding: 30px; line-height: 1.6; }
+        h1 { color: #0f172a; font-size: 24px; font-weight: 600; margin-bottom: 20px; text-align: center; }
+        p { margin-bottom: 15px; font-size: 16px; }
+        .button-wrapper { text-align: center; margin: 30px 0; }
+        .button { background-color: #10b981; color: #ffffff !important; text-decoration: none; padding: 12px 28px; border-radius: 6px; font-weight: 600; display: inline-block; }
+        .footer { background-color: #f1f5f9; padding: 25px 20px; text-align: center; font-size: 13px; color: #64748b; }
+        .footer a { color: #10b981; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <center class="wrapper">
+        <div class="webkit">
+            <!-- Header -->
+            <div class="header">
+                <h2>MZ Recursos Humanos</h2>
+                <p>Únete al Futuro</p>
+            </div>
+            
+            <!-- Body -->
+            <div class="content">
+                {% block content %}
+                <!-- El contenido específico del correo va aquí -->
+                {% endblock %}
+            </div>
+            
+            <!-- Footer -->
+            <div class="footer">
+                <p>&copy; 2026 MZ Recursos Humanos - Marina Zubiani.<br>Todos los derechos reservados.</p>
+                <p>¿Tienes dudas? <br><a href="https://wa.me/5492336454547">Contáctanos por WhatsApp</a></p>
+            </div>
+        </div>
+    </center>
+</body>
+</html>

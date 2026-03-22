@@ -14,7 +14,16 @@
             <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">
                 {{ field.label }}
             </label>
+            {% if 'password' in field.name %}
+            <div style="position: relative;">
+                {{ field }}
+                <button type="button" onclick="togglePasswordVisibility('{{ field.id_for_label }}', this)" tabindex="-1" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #6b7280; cursor: pointer; padding: 0;">
+                    <i class="fa-regular fa-eye"></i>
+                </button>
+            </div>
+            {% else %}
             {{ field }}
+            {% endif %}
             {% if field.help_text %}
             <small style="color: #6b7280; display: block; margin-top: 0.25rem;">{{ field.help_text }}</small>
             {% endif %}

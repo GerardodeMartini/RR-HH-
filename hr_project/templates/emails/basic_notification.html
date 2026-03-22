@@ -1,0 +1,18 @@
+{% extends 'emails/base_email.html' %}
+
+{% block content %}
+    <h1>{{ title }}</h1>
+    
+    <p>{{ message|linebreaksbr }}</p>
+    
+    {% if button_text and button_url %}
+    <div class="button-wrapper">
+        <a href="{{ button_url }}" class="button">{{ button_text }}</a>
+    </div>
+    {% endif %}
+    
+    <p style="margin-top: 30px;">
+        Saludos cordiales,<br>
+        <strong>El equipo de MZ Recursos Humanos</strong>
+    </p>
+{% endblock %}
