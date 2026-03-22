@@ -7,3 +7,5 @@ def custom_logout(request, next_page=None):
     if not next_page:
         next_page = request.GET.get('next', '/')
     return redirect(next_page)
+
+
