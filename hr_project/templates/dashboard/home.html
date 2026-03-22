@@ -1,72 +1,92 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-        <h1>Panel de Control</h1>
-        <div class="user-info">
-            <span>Hola, {{ user.username }}</span> |
-            <form action="{% url 'dashboard_logout' %}" method="post" style="display:inline;">
-                {% csrf_token %}
-                <button type="submit"
-                    style="background: none; border: none; color: red; cursor: pointer; text-decoration: underline; padding: 0;">Salir</button>
-            </form>
-        </div>
-    </div>
+<div style="max-width: 800px; margin: 0 auto;">
+    <a href="/" style="display: inline-block; margin-bottom: 2rem; color: var(--text-muted);">&larr; Volver a las
+        ofertas</a>
 
-    <!-- Stats Cards -->
-    <div style="display: flex; gap: 2rem; margin-bottom: 3rem;">
-        <div class="vacancy-card" style="flex: 1; padding: 1.5rem; text-align: center;">
-            <h3 style="margin: 0; font-size: 2rem; color: var(--accent-color);">{{ total_candidates }}</h3>
-            <span style="color: var(--text-muted);">Total Candidatos</span>
-        </div>
-        <div class="vacancy-card" style="flex: 1; padding: 1.5rem; text-align: center;">
-            <h3 style="margin: 0; font-size: 2rem; color: var(--success);">{{ active_candidates }}</h3>
-            <span style="color: var(--text-muted);">Activos (Buscando)</span>
-        </div>
-        <div class="vacancy-card" style="flex: 1; padding: 1.5rem; text-align: center;">
-            <h3 style="margin: 0; font-size: 2rem;">{{ vacancies.count }}</h3>
-            <span style="color: var(--text-muted);">Vacantes Abiertas</span>
-        </div>
-    </div>
+    <div style="background: white; padding: 3rem; border-radius: 8px; border: 1px solid var(--border-color);">
+        <span class="tag" style="margin-bottom: 1rem; display: inline-block;">{{ vacancy.company.industry }}</span>
+        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">{{ vacancy.title }}</h1>
+        <p style="font-size: 1.25rem; color: var(--text-muted); margin-bottom: 2rem;">en {{ vacancy.company.name }}</p>
 
-    <div style="margin-bottom: 2rem; text-align: right;">
-        <a href="{% url 'staff_candidate_list' %}" class="btn btn-primary"
-            style="padding: 0.8rem 1.5rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
-            <span>👥</span> Ver Base de Talentos Completa
-        </a>
-        <a href="{% url 'dashboard_settings' %}" class="btn btn-outline-secondary"
-            style="padding: 0.8rem 1.5rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; margin-left: 0.5rem;">
-            <span>⚙️</span> Configuración IA
-        </a>
-    </div>
+        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 2rem 0;">
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>
-            {% if current_filter == 'active' %}Vacantes Activas{% endif %}
-            {% if current_filter == 'closed' %}Vacantes Cerradas{% endif %}
-            {% if current_filter == 'all' %}Todas las Vacantes{% endif %}
-        </h2>
-        <div class="btn-group">
-            <a href="?status=active"
-                class="btn btn-outline-primary {% if current_filter == 'active' %}active{% endif %}">Activas</a>
-            <a href="?status=closed"
-                class="btn btn-outline-secondary {% if current_filter == 'closed' %}active{% endif %}">Cerradas</a>
-            <a href="?status=all"
-                class="btn btn-outline-dark {% if current_filter == 'all' %}active{% endif %}">Todas</a>
+        <div style="line-height: 1.8;">
+            {{ vacancy.description|linebreaks }}
         </div>
-    </div>
-    <div class="vacancy-grid" style="margin-top: 1rem;">
-        {% for vacancy in vacancies %}
-        <div class="vacancy-card">
-            <h3>{{ vacancy.title }}</h3>
-            <p>{{ vacancy.company.name }}</p>
-            <div style="margin-top: 1rem;">
-                <a href="{% url 'kanban_board' vacancy.id %}" class="btn btn-primary"
-                    style="width: 100%; text-align: center;">Gestionar Pipeline</a>
+
+        <div style="margin-top: 4rem;">
+            <h3 style="margin-bottom: 1rem;">Postularse a esta posición</h3>
+
+            {% if is_company %}
+                        <div style="background-color: #e0f2fe; border-left: 4px solid #3b82f6; padding: 1.5rem; margin-bottom: 2rem; border-radius: 4px;">
+                <p style="margin: 0; color: #1e40af; font-size: 1rem;">
+                    No tienes permiso para postularte como candidato desde el panel de staff.
+                </p>
             </div>
+            {% else %}
+
+            {% if candidate %}
+            <div style="background-color: #e0f2fe; border-left: 4px solid #3b82f6; padding: 1rem; margin-bottom: 2rem; border-radius: 4px;">
+                <p style="margin: 0; color: #1e40af; font-size: 0.95rem;">
+                    <strong>💡 Tus datos fueron precompletados:</strong> Si necesitas actualizar algún dato (como tu teléfono, habilidades o subir un nuevo CV), simplemente modifícalo aquí. <strong>Cualquier cambio que realices se guardará automáticamente en tu Perfil de Candidato para futuras postulaciones.</strong>
+                </p>
+            </div>
+            {% endif %}
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="text" name="first_name" value="{{ candidate.first_name|default:'' }}" required>
+                </div>
+                <div class="form-group">
+                    <label>Apellido</label>
+                    <input type="text" name="last_name" value="{{ candidate.last_name|default:'' }}" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" value="{{ candidate.email|default:'' }}" required>
+                </div>
+                <div class="form-group">
+                    <label>Teléfono</label>
+                    <input type="text" name="phone" value="{{ candidate.phone|default:'' }}">
+                </div>
+
+                <div class="form-group">
+                    <label>CV / Currículum (PDF/Word)</label>
+                    {% if candidate and candidate.resume_file %}
+                        <p style="font-size: 0.9rem; color: #2563eb; margin-bottom: 0.5rem;">📁 Ya tienes un currículum cargado en tu perfil. Sube uno nuevo solo si deseas actualizarlo para esta postulación.</p>
+                        <input type="file" name="resume">
+                    {% else %}
+                        <input type="file" name="resume" required>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label>Habilidades Clave (Separadas por coma)</label>
+                    <input type="text" name="skills" value="{{ candidate.skills|default:'' }}" placeholder="ej: Python, SQL, Ventas">
+                </div>
+
+                {% if killer_questions %}
+                <div style="background: #f1f5f9; padding: 1.5rem; border-radius: 6px; margin: 2rem 0;">
+                    <h4 style="margin-top: 0;">Preguntas de Pre-selección</h4>
+                    {% for q in killer_questions %}
+                    <div class="form-group">
+                        <label>{{ q.text }}</label>
+                        <input type="text" name="question_{{ q.id }}" required>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem;">Enviar
+                    Postulación</button>
+            </form>
+            {% endif %}
         </div>
-        {% endfor %}
     </div>
 </div>
 {% endblock %}
