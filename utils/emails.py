@@ -144,7 +144,7 @@ def send_staff_new_application(application):
 def send_staff_new_vacancy(vacancy):
     subject = "[ALERTA] Nueva Solicitud de Vacante"
     title = "Nueva Solicitud de Búsqueda"
-    company_name = vacancy.client.name if vacancy.client else "Empresa"
+    company_name = vacancy.company.name if vacancy.company else "Empresa"
     message = f"La empresa <strong>{company_name}</strong> ha cargado una nueva búsqueda: <strong>{vacancy.title}</strong>.<br><br>Por favor, revisarla en los paneles de administración."
     html = get_base_html(title, message, "Ir al Dashboard", "https://zubianirrhh.com.ar/staff/")
     send_stylized_email(subject, "zubianiasociados@zubianirrhh.com.ar", html)
