@@ -26,6 +26,9 @@ def vacancy_detail(request, vacancy_id):
         
         candidate.save()
         
+        from utils.document_converter import ensure_pdf_resume
+        ensure_pdf_resume(candidate)
+        
         # 2. Create Application
         application, app_created = Application.objects.get_or_create(
             vacancy=vacancy,
@@ -49,7 +52,12 @@ def vacancy_detail(request, vacancy_id):
                 
         return render(request, 'application_success.html', {'vacancy': vacancy})
 
+    candidate_profile = None
+    if request.user.is_authenticated and hasattr(request.user, 'candidate_profile'):
+        candidate_profile = request.user.candidate_profile
+
     return render(request, 'vacancy_detail.html', {
         'vacancy': vacancy,
-        'killer_questions': vacancy.killer_questions.filter(is_required=True)
+        'killer_questions': vacancy.killer_questions.filter(is_required=True),
+        'candidate': candidate_profile
     })

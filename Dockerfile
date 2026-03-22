@@ -19,6 +19,9 @@ RUN apt-get update && apt-get install -y \
     libffi-dev \
     shared-mime-info \
     pkg-config \
+    libreoffice-writer \
+    libreoffice-java-common \
+    default-jre-headless \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

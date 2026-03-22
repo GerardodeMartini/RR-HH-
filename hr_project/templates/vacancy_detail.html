@@ -24,29 +24,34 @@
 
                 <div class="form-group">
                     <label>Nombre</label>
-                    <input type="text" name="first_name" required>
+                    <input type="text" name="first_name" value="{{ candidate.first_name|default:'' }}" required>
                 </div>
                 <div class="form-group">
                     <label>Apellido</label>
-                    <input type="text" name="last_name" required>
+                    <input type="text" name="last_name" value="{{ candidate.last_name|default:'' }}" required>
                 </div>
                 <div class="form-group">
                     <label>Email</label>
-                    <input type="email" name="email" required>
+                    <input type="email" name="email" value="{{ candidate.email|default:'' }}" required>
                 </div>
                 <div class="form-group">
                     <label>Teléfono</label>
-                    <input type="text" name="phone">
+                    <input type="text" name="phone" value="{{ candidate.phone|default:'' }}">
                 </div>
 
                 <div class="form-group">
                     <label>CV / Currículum (PDF/Word)</label>
-                    <input type="file" name="resume" required>
+                    {% if candidate and candidate.resume_file %}
+                        <p style="font-size: 0.9rem; color: #2563eb; margin-bottom: 0.5rem;">📁 Ya tienes un currículum cargado en tu perfil. Sube uno nuevo solo si deseas actualizarlo para esta postulación.</p>
+                        <input type="file" name="resume">
+                    {% else %}
+                        <input type="file" name="resume" required>
+                    {% endif %}
                 </div>
 
                 <div class="form-group">
                     <label>Habilidades Clave (Separadas por coma)</label>
-                    <input type="text" name="skills" placeholder="ej: Python, SQL, Ventas">
+                    <input type="text" name="skills" value="{{ candidate.skills|default:'' }}" placeholder="ej: Python, SQL, Ventas">
                 </div>
 
                 {% if killer_questions %}
