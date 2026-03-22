@@ -72,6 +72,10 @@ class CompanyRegisterForm(forms.ModelForm):
         if User.objects.filter(username=username).exists():
              self.add_error('username', "Este nombre de usuario ya está en uso.")
              
+        email = cleaned_data.get("email")
+        if email and (User.objects.filter(email__iexact=email).exists() or Company.objects.filter(email__iexact=email).exists()):
+             self.add_error('email', "Este correo electrónico ya se encuentra registrado en RRHH MARINA. Por favor, utiliza otro o recupera tu contraseña.")
+             
         return cleaned_data
 
     def save(self, commit=True):

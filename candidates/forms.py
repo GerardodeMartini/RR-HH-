@@ -109,6 +109,12 @@ class CandidateRegisterForm(UserCreationForm):
             'email': 'Dirección de correo válida.',
         }
 
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if email and Candidate.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError("Este correo electrónico ya se encuentra registrado en RRHH MARINA. Por favor, utiliza otro o recupera tu contraseña.")
+        return email
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Force Spanish labels for password fields from UserCreationForm
