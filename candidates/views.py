@@ -81,8 +81,11 @@ def candidate_dashboard(request):
     
     applications = Application.objects.filter(candidate=candidate).order_by('-applied_at')
     
+    # Get IDs of vacancies the candidate has already applied for
+    applied_vacancy_ids = applications.values_list('vacancy_id', flat=True)
+    
     from clients.models import Vacancy
-    vacancies = Vacancy.objects.filter(status='active').order_by('-created_at')
+    vacancies = Vacancy.objects.filter(status='active').exclude(id__in=applied_vacancy_ids).order_by('-created_at')
     
     return render(request, 'candidates/dashboard.html', {
         'candidate': candidate,
