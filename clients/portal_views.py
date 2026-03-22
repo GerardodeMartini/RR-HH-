@@ -8,6 +8,11 @@ from candidates.models import Candidate
 
 from utils.turnstile import validate_turnstile
 from django.contrib import messages
+from utils.emails import (
+    send_company_welcome,
+    send_company_vacancy_confirmation,
+    send_staff_new_vacancy
+)
 
 class CompanyLoginView(LoginView):
     template_name = 'clients/login.html'
@@ -29,6 +34,11 @@ def company_register(request):
         form = CompanyRegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
+            
+            # Send Welcome Email
+            if hasattr(user, 'company_profile'):
+                send_company_welcome(user.company_profile)
+                
             # Login immediately
             from django.contrib.auth import login
             login(request, user)
@@ -94,6 +104,11 @@ def create_vacancy(request):
             vacancy = form.save(commit=False)
             vacancy.company = company
             vacancy.save()
+            
+            # Send email confirmation & staff alert
+            send_company_vacancy_confirmation(company, vacancy)
+            send_staff_new_vacancy(vacancy)
+            
             return redirect('client_portal')
     else:
         form = VacancyForm()

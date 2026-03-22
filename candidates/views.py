@@ -26,6 +26,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from applications.models import Application
 from .forms import CandidateProfileForm, CandidateRegisterForm
+from utils.emails import send_candidate_welcome
 
 def candidate_login(request):
     if request.method == 'POST':
@@ -44,11 +45,12 @@ def candidate_register(request):
         if form.is_valid():
             user = form.save()
             # Link candidate profile to user
-            Candidate.objects.create(
+            candidate_obj = Candidate.objects.create(
                 user=user, 
                 email=user.email,
                 first_name=user.username
             )
+            send_candidate_welcome(candidate_obj)
             login(request, user)
             return redirect('candidate_dashboard')
     else:

@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Vacancy, Company
 from candidates.models import Candidate
 from applications.models import Application, Answer
+from utils.emails import send_candidate_application, send_staff_new_application
 
 def vacancy_list(request):
     vacancies = Vacancy.objects.filter(status='active').order_by('-created_at')
@@ -30,6 +31,10 @@ def vacancy_detail(request, vacancy_id):
             vacancy=vacancy,
             candidate=candidate
         )
+        
+        if app_created:
+            send_candidate_application(candidate, vacancy)
+            send_staff_new_application(application)
         
         # 3. Save Killer Question Answers
         for key, value in request.POST.items():
