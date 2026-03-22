@@ -53,11 +53,17 @@ def vacancy_detail(request, vacancy_id):
         return render(request, 'application_success.html', {'vacancy': vacancy})
 
     candidate_profile = None
-    if request.user.is_authenticated and hasattr(request.user, 'candidate_profile'):
-        candidate_profile = request.user.candidate_profile
+    is_company = False
+    
+    if request.user.is_authenticated:
+        if hasattr(request.user, 'candidate_profile'):
+            candidate_profile = request.user.candidate_profile
+        if hasattr(request.user, 'company_profile'):
+            is_company = True
 
     return render(request, 'vacancy_detail.html', {
         'vacancy': vacancy,
         'killer_questions': vacancy.killer_questions.filter(is_required=True),
-        'candidate': candidate_profile
+        'candidate': candidate_profile,
+        'is_company': is_company
     })
