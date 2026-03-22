@@ -191,8 +191,40 @@
             </form>
         </div>
 
-        <!-- Application List -->
+        <!-- Main Content (Vacancies & Applications) -->
         <div>
+            <!-- Active Vacancies -->
+            <h2 style="font-size: 1.5rem; font-weight: 600; color: #111827; margin-top: 0; margin-bottom: 1.5rem;">Ofertas Disponibles</h2>
+            
+            {% if vacancies %}
+            <div style="display: grid; gap: 1rem; margin-bottom: 3rem;">
+                {% for vacancy in vacancies %}
+                <div class="app-card" style="align-items: flex-start; flex-direction: column;">
+                    <div style="width: 100%; display: flex; justify-content: space-between; align-items:flex-start; margin-bottom: 0.5rem;">
+                        <div>
+                            <h3 style="margin: 0; font-size: 1.1rem; font-weight: 600; color: #111827;">{{ vacancy.title }}</h3>
+                            <div style="color: #6b7280; font-size: 0.9rem; margin-top: 0.25rem;">
+                                {{ vacancy.company.name }} • Publicado el {{ vacancy.created_at|date:"d M" }}
+                            </div>
+                        </div>
+                        <span class="tag" style="background: #f3f4f6; color: #374151; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem; font-weight: 500;">
+                            {{ vacancy.company.industry }}
+                        </span>
+                    </div>
+                    <p style="color: #4b5563; font-size: 0.95rem; line-height: 1.5; margin: 0.5rem 0 1rem 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                        {{ vacancy.description|truncatewords:30 }}
+                    </p>
+                    <a href="{% url 'vacancy_detail' vacancy.id %}" class="btn-save" style="width: auto; padding: 0.5rem 1rem; text-decoration: none; font-size: 0.9rem; margin-top: auto; display: inline-block; text-align: center;">Ver y Postularse</a>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div style="text-align: center; padding: 2rem; background: #f9fafb; border-radius: 8px; margin-bottom: 3rem; border: 1px dashed #d1d5db;">
+                <p style="color: #6b7280; margin: 0;">No hay ofertas activas en este momento.</p>
+            </div>
+            {% endif %}
+
+            <!-- Application List -->
             <h2 style="font-size: 1.5rem; font-weight: 600; color: #111827; margin-top: 0; margin-bottom: 1.5rem;">Mis
                 Postulaciones</h2>
 
