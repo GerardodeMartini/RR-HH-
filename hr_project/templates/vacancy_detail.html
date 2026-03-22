@@ -17,7 +17,15 @@
         </div>
 
         <div style="margin-top: 4rem;">
-            <h3 style="margin-bottom: 2rem;">Postularse a esta posición</h3>
+            <h3 style="margin-bottom: 1rem;">Postularse a esta posición</h3>
+
+            {% if candidate %}
+            <div style="background-color: #e0f2fe; border-left: 4px solid #3b82f6; padding: 1rem; margin-bottom: 2rem; border-radius: 4px;">
+                <p style="margin: 0; color: #1e40af; font-size: 0.95rem;">
+                    <strong>💡 Tus datos fueron precompletados:</strong> Si necesitas actualizar algún dato (como tu teléfono, habilidades o subir un nuevo CV), simplemente modifícalo aquí. <strong>Cualquier cambio que realices se guardará automáticamente en tu Perfil de Candidato para futuras postulaciones.</strong>
+                </p>
+            </div>
+            {% endif %}
 
             <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
