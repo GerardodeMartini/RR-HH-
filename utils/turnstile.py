@@ -87,17 +87,17 @@ class TurnstileField(forms.CharField):
 def validate_turnstile(request):
     """
     Validates the Turnstile token from the request.
-    Returns True if valid, raises ValidationError if not.
+    Returns a dict: {'success': bool, 'error': str (optional)}
     """
     token = request.POST.get('cf-turnstile-response')
     secret_key = getattr(settings, 'TURNSTILE_SECRET_KEY', None)
     
     if not token:
-         raise ValidationError(_("Por favor, completa la verificación de seguridad (Captcha)."))
+         return {'success': False, 'error': str(_("Por favor, completa la verificación de seguridad (Captcha)."))}
          
     if not secret_key:
          # Fail open or closed? Closed for security.
-         raise ValidationError("Error de configuración del servidor (Captcha Secret).")
+         return {'success': False, 'error': "Error de configuración del servidor (Captcha Secret)."}
 
     try:
         response = requests.post(
@@ -112,9 +112,9 @@ def validate_turnstile(request):
         result = response.json()
         
         if not result.get('success'):
-            raise ValidationError(_("Falló la verificación de seguridad. Intenta nuevamente."))
+            return {'success': False, 'error': str(_("Falló la verificación de seguridad. Intenta nuevamente."))}
             
     except requests.RequestException:
-        raise ValidationError(_("Error conectando con el servicio de verificación."))
+        return {'success': False, 'error': str(_("Error conectando con el servicio de verificación."))}
         
-    return True
+    return {'success': True}
