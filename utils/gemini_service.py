@@ -19,7 +19,16 @@ class AnalysisSchema(BaseModel):
     consistency_warning: Optional[str] = Field(description="Warning if the candidate's name on the CV does not match the application form")
 
 def get_api_key():
-    # Retrieve API Key from Django Settings (backend configuration)
+    # Retrieve API Key from Database Settings (Staff Panel)
+    try:
+        from dashboard.models import SystemSettings
+        system_settings = SystemSettings.objects.first()
+        if system_settings and system_settings.gemini_api_key:
+            return system_settings.gemini_api_key
+    except Exception:
+        pass
+        
+    # Fallback to Django Settings (.env)
     if hasattr(settings, 'GEMINI_API_KEY') and settings.GEMINI_API_KEY:
         return settings.GEMINI_API_KEY
     return None
