@@ -103,7 +103,7 @@ header {
     border-bottom: 1px solid #e2e8f0;
     padding: 1rem 0;
     box-shadow: 0 2px 4px rgba(0,0,0,0.04);
-    margin-bottom: 2rem;
+    margin-bottom: 0; /* Remove space between header and hero */
 }
 
 .header-main-content {
@@ -796,7 +796,47 @@ footer {
         padding: 3rem 0;
     }
 }
+html {
+    scroll-behavior: smooth;
+}
+
+.hero-buttons {
+    margin-top: 3rem;
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.hero-btn {
+    padding: 0.8rem 2rem;
+    border-radius: 50px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s;
+    border: 2px solid white;
+    background: rgba(255,255,255,0.1);
+    color: white;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.hero-btn:hover {
+    background: white;
+    color: var(--primary-color);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
 @media screen and (max-width: 480px) {
+    .hero-buttons {
+        flex-direction: column;
+        width: 100%;
+        max-width: 300px;
+        margin-left: auto;
+        margin-right: auto;
+    }
     .top-nav-container,
     .header-main-content {
         padding: 0 15px;
