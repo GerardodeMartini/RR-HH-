@@ -25,6 +25,12 @@
                     <strong>Acción no permitida:</strong> Estás navegando con una cuenta de <strong>Empresa</strong>. Las empresas publican vacantes, no pueden postularse a ellas. Si eres un candidato, por favor <a href="{% url 'logout' %}" style="color: #7f1d1d; font-weight: bold; text-decoration: underline;">cierra sesión</a> y accede con tu cuenta correspondiente.
                 </p>
             </div>
+            {% elif is_staff %}
+            <div style="background-color: #ffedd5; border-left: 4px solid #f97316; padding: 1.5rem; margin-bottom: 2rem; border-radius: 4px;">
+                <p style="margin: 0; color: #9a3412; font-size: 1rem;">
+                    <strong>Acción no permitida:</strong> Estás navegando con una cuenta de <strong>Staff</strong>. El personal gestiona la plataforma y no puede postularse a las vacantes.
+                </p>
+            </div>
             {% else %}
 
             {% if candidate %}

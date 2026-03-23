@@ -11,7 +11,15 @@ def vacancy_list(request):
 def vacancy_detail(request, vacancy_id):
     vacancy = get_object_or_404(Vacancy, id=vacancy_id)
     
+    # Check if the user is staff early on
+    is_staff = request.user.is_authenticated and request.user.is_staff
+
     if request.method == 'POST':
+        # Block staff from applying
+        if is_staff:
+            # Maybe add a message here in the future if needed
+            return redirect('home')
+
         # 1. Create/Update Candidate
         email = request.POST.get('email')
         candidate, created = Candidate.objects.get_or_create(email=email)
@@ -68,5 +76,6 @@ def vacancy_detail(request, vacancy_id):
         'vacancy': vacancy,
         'killer_questions': vacancy.killer_questions.filter(is_required=True),
         'candidate': candidate_profile,
-        'is_company': is_company
+        'is_company': is_company,
+        'is_staff': is_staff,
     })
