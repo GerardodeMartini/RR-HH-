@@ -9,9 +9,7 @@
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
         <h1>Panel de Reclutamiento</h1>
         <div style="display: flex; gap: 1rem;">
-            <a href="{% url 'add_candidate' %}" class="btn btn-primary">Cargar Candidato</a>
             <a href="{% url 'staff_candidate_list' %}" class="btn btn-secondary">Base de CVs</a>
-            <a href="{% url 'dashboard_settings' %}" class="btn btn-secondary">Configuración</a>
         </div>
     </div>
 
@@ -47,7 +45,7 @@
             <table class="table" style="width: 100%; border-collapse: collapse;">
                 <thead>
                     <tr>
-                        <th style="text-align: left; padding: 0.75rem; border-bottom: 1px solid var(--border-color);">Posición</th>
+                        <th style="text-align: left; padding: 0.75rem; border-bottom: 1px solid var(--border-color);">Trabajo Solicitado</th>
                         <th style="text-align: left; padding: 0.75rem; border-bottom: 1px solid var(--border-color);">Empresa</th>
                         <th style="text-align: left; padding: 0.75rem; border-bottom: 1px solid var(--border-color);">Postulaciones</th>
                         <th style="text-align: left; padding: 0.75rem; border-bottom: 1px solid var(--border-color);">Estado</th>
