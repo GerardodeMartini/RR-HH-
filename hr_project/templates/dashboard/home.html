@@ -10,6 +10,7 @@
         <h1>Panel de Reclutamiento</h1>
         <div style="display: flex; gap: 1rem;">
             <a href="{% url 'add_candidate' %}" class="btn btn-primary">Cargar Candidato</a>
+            <a href="{% url 'staff_candidate_list' %}" class="btn btn-secondary">Base de CVs</a>
             <a href="{% url 'dashboard_settings' %}" class="btn btn-secondary">Configuración</a>
         </div>
     </div>
@@ -65,7 +66,7 @@
                             <span class="tag tag-{{ vacancy.status }}">{{ vacancy.get_status_display }}</span>
                         </td>
                         <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">
-                            <a href="{% url 'kanban_board' vacancy.id %}" class="btn btn-sm btn-primary">Ver Board</a>
+                            <a href="{% url 'kanban_board' vacancy.id %}" class="btn btn-sm btn-primary">Ver Tabla</a>
                         </td>
                     </tr>
                     {% empty %}
