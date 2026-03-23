@@ -55,7 +55,6 @@
                 <a href="{% url 'candidate_dashboard' %}">Mi Panel</a>
                 {% elif user.is_staff %}
                 <a href="{% url 'dashboard_home' %}">Panel Recruiter</a>
-                <a href="{% url 'dashboard_settings' %}" title="Configuración"><i class="fas fa-cog"></i></a>
                 {% endif %}
 
                 <form action="{% url 'logout' %}" method="post" style="display:inline;">
