@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from clients import portal_views, views as client_views
+from clients import views as client_views
 
 urlpatterns = [
     # Admin Core
@@ -18,11 +18,9 @@ urlpatterns = [
     path('candidate/', include('candidates.urls')),
 
     # --- Main Site (Vistas Públicas) ---
-    # Esta es la sección corregida. Ahora apunta directamente a las vistas.
-    path('', portal_views.home, name='home'),
-    path('vacancies/', portal_views.vacancy_list, name='vacancy_list'),
+    path('', client_views.vacancy_list, name='home'),
+    path('vacancies/', client_views.vacancy_list, name='vacancy_list'),
     path('vacancy/<int:vacancy_id>/', client_views.vacancy_detail, name='vacancy_detail'),
-    path('application/success/', client_views.application_success, name='application_success'),
 ]
 
 if settings.DEBUG:

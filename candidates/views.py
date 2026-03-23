@@ -73,8 +73,11 @@ def candidate_dashboard(request):
         form = CandidateProfileForm(request.POST, request.FILES, instance=candidate)
         if form.is_valid():
             candidate_obj = form.save()
-            from utils.document_converter import ensure_pdf_resume
-            ensure_pdf_resume(candidate_obj)
+            try:
+                from utils.document_converter import ensure_pdf_resume
+                ensure_pdf_resume(candidate_obj)
+            except ImportError:
+                pass
             return redirect('candidate_dashboard')
     else:
         form = CandidateProfileForm(instance=candidate)

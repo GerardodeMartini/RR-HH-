@@ -77,6 +77,7 @@ def analyze_application(application_id):
         """
 
         contents = [prompt_intro]
+        uploaded_file = None
 
         # Upload Resume if exists
         if candidate.resume_file:
@@ -100,15 +101,6 @@ def analyze_application(application_id):
                         file=file_path,
                         config=types.UploadFileConfig(mime_type='application/pdf')
                     )
-                    contents.append(types.Content(
-                        role="user",
-                        parts=[
-                            types.Part.from_uri(
-                                file_uri=uploaded_file.uri,
-                                mime_type=uploaded_file.mime_type
-                            )
-                        ]
-                    ))
                 else:
                     contents.append("Error: El archivo de CV no se encuentra en el servidor.")
             except Exception as e:
@@ -123,12 +115,12 @@ def analyze_application(application_id):
         final_contents = []
         final_contents.append(prompt_intro)
         
-        if candidate.resume_file and 'uploaded_file' in locals():
+        if uploaded_file:
              final_contents.append(types.Part.from_uri(
                 file_uri=uploaded_file.uri,
                 mime_type=uploaded_file.mime_type
              ))
-        elif candidate.resume_file and not 'uploaded_file' in locals():
+        elif candidate.resume_file and not uploaded_file:
              pass # Error handled above or file didn't exist
         
         # Generate Content with Structured Output

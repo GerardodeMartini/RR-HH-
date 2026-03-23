@@ -26,8 +26,11 @@ def vacancy_detail(request, vacancy_id):
         
         candidate.save()
         
-        from utils.document_converter import ensure_pdf_resume
-        ensure_pdf_resume(candidate)
+        try:
+            from utils.document_converter import ensure_pdf_resume
+            ensure_pdf_resume(candidate)
+        except ImportError:
+            pass # Si el módulo falla, la postulación igual avanza
         
         # 2. Create Application
         application, app_created = Application.objects.get_or_create(
