@@ -3,10 +3,14 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from clients import views as client_views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     # Admin Core
     path('admin/', admin.site.urls),
+    
+    # Auth
+    path('logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
 
     # Dashboard / Staff Portal
     path('staff/', include('dashboard.urls')),
