@@ -1,92 +1,101 @@
 {% extends "base.html" %}
+{% load dashboard_extras %}
+
+{% block title %}Dashboard de Reclutador{% endblock %}
 
 {% block content %}
-<div style="max-width: 800px; margin: 0 auto;">
-    <a href="/" style="display: inline-block; margin-bottom: 2rem; color: var(--text-muted);">&larr; Volver a las
-        ofertas</a>
+<div class="container" style="max-width: 1200px; margin: 2rem auto;">
 
-    <div style="background: white; padding: 3rem; border-radius: 8px; border: 1px solid var(--border-color);">
-        <span class="tag" style="margin-bottom: 1rem; display: inline-block;">{{ vacancy.company.industry }}</span>
-        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">{{ vacancy.title }}</h1>
-        <p style="font-size: 1.25rem; color: var(--text-muted); margin-bottom: 2rem;">en {{ vacancy.company.name }}</p>
-
-        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 2rem 0;">
-
-        <div style="line-height: 1.8;">
-            {{ vacancy.description|linebreaks }}
-        </div>
-
-        <div style="margin-top: 4rem;">
-            <h3 style="margin-bottom: 1rem;">Postularse a esta posición</h3>
-
-            {% if is_company %}
-                        <div style="background-color: #e0f2fe; border-left: 4px solid #3b82f6; padding: 1.5rem; margin-bottom: 2rem; border-radius: 4px;">
-                <p style="margin: 0; color: #1e40af; font-size: 1rem;">
-                    No tienes permiso para postularte como candidato desde el panel de staff.
-                </p>
-            </div>
-            {% else %}
-
-            {% if candidate %}
-            <div style="background-color: #e0f2fe; border-left: 4px solid #3b82f6; padding: 1rem; margin-bottom: 2rem; border-radius: 4px;">
-                <p style="margin: 0; color: #1e40af; font-size: 0.95rem;">
-                    <strong>💡 Tus datos fueron precompletados:</strong> Si necesitas actualizar algún dato (como tu teléfono, habilidades o subir un nuevo CV), simplemente modifícalo aquí. <strong>Cualquier cambio que realices se guardará automáticamente en tu Perfil de Candidato para futuras postulaciones.</strong>
-                </p>
-            </div>
-            {% endif %}
-
-            <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-
-                <div class="form-group">
-                    <label>Nombre</label>
-                    <input type="text" name="first_name" value="{{ candidate.first_name|default:'' }}" required>
-                </div>
-                <div class="form-group">
-                    <label>Apellido</label>
-                    <input type="text" name="last_name" value="{{ candidate.last_name|default:'' }}" required>
-                </div>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" name="email" value="{{ candidate.email|default:'' }}" required>
-                </div>
-                <div class="form-group">
-                    <label>Teléfono</label>
-                    <input type="text" name="phone" value="{{ candidate.phone|default:'' }}">
-                </div>
-
-                <div class="form-group">
-                    <label>CV / Currículum (PDF/Word)</label>
-                    {% if candidate and candidate.resume_file %}
-                        <p style="font-size: 0.9rem; color: #2563eb; margin-bottom: 0.5rem;">📁 Ya tienes un currículum cargado en tu perfil. Sube uno nuevo solo si deseas actualizarlo para esta postulación.</p>
-                        <input type="file" name="resume">
-                    {% else %}
-                        <input type="file" name="resume" required>
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    <label>Habilidades Clave (Separadas por coma)</label>
-                    <input type="text" name="skills" value="{{ candidate.skills|default:'' }}" placeholder="ej: Python, SQL, Ventas">
-                </div>
-
-                {% if killer_questions %}
-                <div style="background: #f1f5f9; padding: 1.5rem; border-radius: 6px; margin: 2rem 0;">
-                    <h4 style="margin-top: 0;">Preguntas de Pre-selección</h4>
-                    {% for q in killer_questions %}
-                    <div class="form-group">
-                        <label>{{ q.text }}</label>
-                        <input type="text" name="question_{{ q.id }}" required>
-                    </div>
-                    {% endfor %}
-                </div>
-                {% endif %}
-
-                <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem;">Enviar
-                    Postulación</button>
-            </form>
-            {% endif %}
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h1>Panel de Reclutamiento</h1>
+        <div style="display: flex; gap: 1rem;">
+            <a href="{% url 'add_candidate' %}" class="btn btn-primary">Cargar Candidato</a>
+            <a href="{% url 'dashboard_settings' %}" class="btn btn-secondary">Configuración</a>
         </div>
     </div>
+
+    <!-- Stats -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+        <div class="stat-card" style="background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color);">
+            <h4>Vacantes Activas</h4>
+            <p style="font-size: 2rem; font-weight: bold; margin: 0;">{{ vacancies|filter_by_status:'active'|length }}</p>
+        </div>
+        <div class="stat-card" style="background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color);">
+            <h4>Candidatos Totales</h4>
+            <p style="font-size: 2rem; font-weight: bold; margin: 0;">{{ total_candidates }}</p>
+        </div>
+        <div class="stat-card" style="background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color);">
+            <h4>Candidatos Activos</h4>
+            <p style="font-size: 2rem; font-weight: bold; margin: 0;">{{ active_candidates }}</p>
+        </div>
+    </div>
+
+    <!-- Vacancy List -->
+    <div style="background: white; padding: 2rem; border-radius: 8px; border: 1px solid var(--border-color);">
+        <h2 style="margin-top: 0; margin-bottom: 1.5rem;">Vacantes</h2>
+
+        <!-- Filters -->
+        <div style="margin-bottom: 1.5rem; display: flex; gap: 0.5rem;">
+            <a href="?status=active" class="btn {% if current_filter == 'active' %}btn-primary{% else %}btn-secondary{% endif %}">Activas</a>
+            <a href="?status=on_hold" class="btn {% if current_filter == 'on_hold' %}btn-primary{% else %}btn-secondary{% endif %}">En Pausa</a>
+            <a href="?status=closed" class="btn {% if current_filter == 'closed' %}btn-primary{% else %}btn-secondary{% endif %}">Cerradas</a>
+            <a href="?status=all" class="btn {% if current_filter == 'all' %}btn-primary{% else %}btn-secondary{% endif %}">Todas</a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th style="text-align: left; padding: 0.75rem; border-bottom: 1px solid var(--border-color);">Posición</th>
+                        <th style="text-align: left; padding: 0.75rem; border-bottom: 1px solid var(--border-color);">Empresa</th>
+                        <th style="text-align: left; padding: 0.75rem; border-bottom: 1px solid var(--border-color);">Postulaciones</th>
+                        <th style="text-align: left; padding: 0.75rem; border-bottom: 1px solid var(--border-color);">Estado</th>
+                        <th style="text-align: left; padding: 0.75rem; border-bottom: 1px solid var(--border-color);"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vacancy in vacancies %}
+                    <tr>
+                        <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">
+                            <a href="{% url 'kanban_board' vacancy.id %}" style="font-weight: bold; text-decoration: none;">{{ vacancy.title }}</a>
+                        </td>
+                        <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">{{ vacancy.company.name }}</td>
+                        <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">{{ vacancy.applications.count }}</td>
+                        <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">
+                            <span class="tag tag-{{ vacancy.status }}">{{ vacancy.get_status_display }}</span>
+                        </td>
+                        <td style="padding: 0.75rem; border-bottom: 1px solid var(--border-color);">
+                            <a href="{% url 'kanban_board' vacancy.id %}" class="btn btn-sm btn-primary">Ver Board</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" style="padding: 1rem; text-align: center;">No hay vacantes para el filtro seleccionado.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Recent Applications -->
+    <div style="background: white; padding: 2rem; border-radius: 8px; border: 1px solid var(--border-color); margin-top: 2rem;">
+        <h2 style="margin-top: 0; margin-bottom: 1.5rem;">Postulaciones Recientes</h2>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+            {% for app in recent_applications %}
+            <li style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--border-color-light);">
+                <div>
+                    <a href="{% url 'application_detail' app.id %}" style="text-decoration: none; font-weight: bold;">{{ app.candidate.first_name }} {{ app.candidate.last_name }}</a>
+                    <span style="color: var(--text-muted);">para</span>
+                    <a href="{% url 'kanban_board' app.vacancy.id %}" style="text-decoration: none;">{{ app.vacancy.title }}</a>
+                </div>
+                <span style="font-size: 0.9rem; color: var(--text-muted);">{{ app.applied_at|timesince }} ago</span>
+            </li>
+            {% empty %}
+            <li>No hay postulaciones recientes.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
 </div>
 {% endblock %}
