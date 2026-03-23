@@ -298,6 +298,7 @@ select {
 /* Dashboard Components */
 .dashboard-container {
     padding: 2rem 0;
+    margin-top: 1rem;
 }
 
 .dashboard-header {
@@ -646,7 +647,7 @@ footer {
     border-radius: 8px;
     border: 1px solid var(--border-color);
     max-width: 800px;
-    margin: 0 auto;
+    margin: 3rem auto;
 }
 
 @media screen and (max-width: 768px) {
@@ -676,7 +677,126 @@ footer {
     }
 }
 
-/* Small Phones (under 480px) */
+/* Hero Section */
+.hero-section {
+    position: relative;
+    width: 100%;
+    min-height: 400px;
+    background-image: url('../img/hero-bg.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -3rem; /* Offset the main padding if necessary */
+    margin-bottom: 4rem;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(26, 60, 52, 0.65); /* Sage dark with opacity */
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: white;
+    padding: 0 20px;
+}
+
+.hero-content .rotating-text-container {
+    color: #f0fdf4; /* Very light green */
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.hero-content .rotating-text {
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+/* Services Section */
+.services-section {
+    padding: 5rem 0;
+    background: #f8fafc;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 4rem;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2.5rem;
+}
+
+.service-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s;
+    text-align: left;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-color);
+}
+
+.service-icon {
+    width: 60px;
+    height: 60px;
+    background: #f0fdf4;
+    color: var(--accent-color);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.service-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+.service-card p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.service-features {
+    font-size: 0.85rem;
+    color: var(--secondary-color);
+    font-style: italic;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+    .hero-content .rotating-text {
+        font-size: 1.5rem;
+    }
+    .hero-section {
+        min-height: 300px;
+    }
+    .services-section {
+        padding: 3rem 0;
+    }
+}
 @media screen and (max-width: 480px) {
     .top-nav-container,
     .header-main-content {

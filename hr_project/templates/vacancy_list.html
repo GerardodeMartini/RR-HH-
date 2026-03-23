@@ -1,9 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div style="text-align: center; max-width: 800px; margin: 0 auto 4rem auto; padding: 2rem 1rem;">
-    <div class="rotating-text-container">
-        <span class="rotating-text" id="changingText">Conectamos el mejor talento con empresas líderes.</span>
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <div class="rotating-text-container">
+            <span class="rotating-text" id="changingText">Conectamos el mejor talento con empresas líderes.</span>
+        </div>
     </div>
 
     <script>
@@ -20,37 +24,84 @@
             const textElement = document.getElementById('changingText');
 
             setInterval(() => {
-                // Iniciar desvanecimiento (Fade out)
                 textElement.style.opacity = 0;
-                
-                // Esperar a que se desvanezca, cambiar el texto y reaparecer (Fade in)
                 setTimeout(() => {
                     currentIndex = (currentIndex + 1) % phrases.length;
                     textElement.textContent = phrases[currentIndex];
                     textElement.style.opacity = 1;
-                }, 500); // Medio segundo para coincidir con la transición CSS
-            }, 3500); // Cambiar frase cada 3.5 segundos
+                }, 500);
+            }, 3500);
         });
     </script>
 </div>
 
-<div class="vacancy-grid">
-    {% for vacancy in vacancies %}
-    <div class="vacancy-card">
-        <div class="vacancy-meta">
-            <span>{{ vacancy.company.name }}</span>
-            <span>&bull;</span>
-            <span>{{ vacancy.created_at|date:"d M" }}</span>
+<!-- Services Section -->
+<div class="services-section">
+    <div class="container">
+        <div style="text-align: center; margin-bottom: 4rem;">
+            <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">Nuestros Servicios</h2>
+            <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 700px; margin: 0 auto;">Soluciones integrales de Recursos Humanos diseñadas para potenciar el crecimiento de tu organización y el desarrollo de las personas.</p>
         </div>
-        <h3><a href="{% url 'vacancy_detail' vacancy.id %}">{{ vacancy.title }}</a></h3>
-        <p>{{ vacancy.description|truncatewords:20 }}</p>
-        <div style="margin-top: 1.5rem;">
-            <a href="{% url 'vacancy_detail' vacancy.id %}" class="btn btn-outline"
-                style="width: 100%; text-align: center;">Ver Posición</a>
+
+        <div class="services-grid">
+            <!-- Búsqueda y Selección -->
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-users-viewfinder"></i></div>
+                <h3>Búsqueda y Selección</h3>
+                <p>Identificación de candidatos para todo tipo de puestos: administrativos, comerciales, técnicos o profesionales de la salud.</p>
+                <div class="service-features">
+                    Entrevistas por competencias, pruebas psicotécnicas y chequeo de referencias.
+                </div>
+            </div>
+
+            <!-- Evaluación de Desempeño -->
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-chart-line"></i></div>
+                <h3>Evaluación de Desempeño</h3>
+                <p>Diseño de herramientas para medir la productividad y el cumplimiento de objetivos en cualquier área del negocio.</p>
+                <div class="service-features">
+                    Feedback constructivo para mejorar el rendimiento individual y grupal.
+                </div>
+            </div>
+
+            <!-- Diagnóstico de Clima Interno -->
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-comments"></i></div>
+                <h3>Diagnóstico de Clima Interno</h3>
+                <p>Relevamiento del ambiente de trabajo para detectar oportunidades de mejora en comunicación y motivación.</p>
+                <div class="service-features">
+                    Encuestas anónimas y planes de acción para reducir el ausentismo y la rotación.
+                </div>
+            </div>
         </div>
     </div>
-    {% empty %}
-    <p>No hay posiciones abiertas en este momento.</p>
-    {% endfor %}
+</div>
+
+<!-- Vacancy List -->
+<div class="container" style="margin-top: 5rem;">
+    <div style="margin-bottom: 3rem;">
+        <h2 style="font-size: 2rem;">Oportunidades Disponibles</h2>
+        <div style="width: 60px; height: 4px; background: var(--accent-color); border-radius: 2px; margin-top: 0.5rem;"></div>
+    </div>
+
+    <div class="vacancy-grid">
+        {% for vacancy in vacancies %}
+        <div class="vacancy-card">
+            <div class="vacancy-meta">
+                <span>{{ vacancy.company.name }}</span>
+                <span>&bull;</span>
+                <span>{{ vacancy.created_at|date:"d M" }}</span>
+            </div>
+            <h3><a href="{% url 'vacancy_detail' vacancy.id %}">{{ vacancy.title }}</a></h3>
+            <p>{{ vacancy.description|truncatewords:20 }}</p>
+            <div style="margin-top: 1.5rem;">
+                <a href="{% url 'vacancy_detail' vacancy.id %}" class="btn btn-outline"
+                    style="width: 100%; text-align: center;">Ver Posición</a>
+            </div>
+        </div>
+        {% empty %}
+        <p>No hay posiciones abiertas en este momento.</p>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}

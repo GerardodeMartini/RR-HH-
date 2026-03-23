@@ -99,16 +99,18 @@
         </div>
     </header>
 
-    <main class="container" style="padding-top: 3rem; padding-bottom: 3rem;">
-        {% if messages %}
-        <div class="messages" style="margin-bottom: 2rem;">
-            {% for message in messages %}
-            <div class="alert-{{ message.tags }}" style="padding: 1rem; border-radius: 6px; margin-bottom: 0.5rem;">
-                {{ message }}
+    <main style="padding-bottom: 3rem;">
+        <div class="container">
+            {% if messages %}
+            <div class="messages" style="margin-top: 2rem; margin-bottom: 2rem;">
+                {% for message in messages %}
+                <div class="alert-{{ message.tags }}" style="padding: 1rem; border-radius: 6px; margin-bottom: 0.5rem;">
+                    {{ message }}
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
+            {% endif %}
         </div>
-        {% endif %}
         {% block content %}{% endblock %}
     </main>
 
