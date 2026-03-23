@@ -93,9 +93,19 @@
     <header>
         <div class="header-main-content">
             <a href="/" class="logo-left">
-                <img src="{% static 'img/logo-color-transparent.png' %}" alt="MZ Recursos Humanos" style="max-height: 200px; width: auto;">
+                <img src="{% static 'img/logo-solido-blanco.png' %}" alt="MZ Recursos Humanos" style="max-height: 80px; width: auto;">
             </a>
-            <div class="header-tagline">Unete al Futuro</div>
+            
+            <div class="header-center-area">
+                <div class="header-tagline">Unete al Futuro</div>
+                <div class="header-nav-small">
+                    <a href="/#nuestros-servicios" class="header-nav-link">Nuestros Servicios</a>
+                    <a href="/#oportunidades" class="header-nav-link">Oportunidades</a>
+                </div>
+            </div>
+
+            <!-- Empty div to balance flexbox if needed, or keep it for future use -->
+            <div style="width: 200px;"></div> 
         </div>
     </header>
 
