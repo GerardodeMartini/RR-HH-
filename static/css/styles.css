@@ -103,6 +103,7 @@ header {
     border-bottom: 1px solid #e2e8f0;
     padding: 1rem 0;
     box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    margin-bottom: 2rem;
 }
 
 .header-main-content {
@@ -685,11 +686,9 @@ footer {
     background-image: url('../img/hero-bg.png');
     background-size: cover;
     background-position: center;
-    background-attachment: fixed;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: -3rem; /* Offset the main padding if necessary */
     margin-bottom: 4rem;
 }
 
