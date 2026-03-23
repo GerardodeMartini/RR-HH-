@@ -4,41 +4,40 @@
 {% block title %}Dashboard de Reclutador{% endblock %}
 
 {% block content %}
-<div class="container" style="max-width: 1200px; margin: 2rem auto;">
-
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+<div class="container dashboard-container">
+    <div class="dashboard-header">
         <h1>Panel de Reclutamiento</h1>
-        <div style="display: flex; gap: 1rem;">
-            <a href="{% url 'staff_candidate_list' %}" class="btn btn-secondary">Base de CVs</a>
+        <div class="filter-group">
+            <a href="{% url 'staff_candidate_list' %}" class="btn btn-outline">Base de CVs</a>
         </div>
     </div>
 
     <!-- Stats -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
-        <div class="stat-card" style="background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color);">
+    <div class="stats-grid">
+        <div class="stat-card">
             <h4>Vacantes Activas</h4>
-            <p style="font-size: 2rem; font-weight: bold; margin: 0;">{{ vacancies|filter_by_status:'active'|length }}</p>
+            <p class="stat-value">{{ vacancies|filter_by_status:'active'|length }}</p>
         </div>
-        <div class="stat-card" style="background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color);">
+        <div class="stat-card">
             <h4>Candidatos Totales</h4>
-            <p style="font-size: 2rem; font-weight: bold; margin: 0;">{{ total_candidates }}</p>
+            <p class="stat-value">{{ total_candidates }}</p>
         </div>
-        <div class="stat-card" style="background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color);">
+        <div class="stat-card">
             <h4>Candidatos Activos</h4>
-            <p style="font-size: 2rem; font-weight: bold; margin: 0;">{{ active_candidates }}</p>
+            <p class="stat-value">{{ active_candidates }}</p>
         </div>
     </div>
 
     <!-- Vacancy List -->
-    <div style="background: white; padding: 2rem; border-radius: 8px; border: 1px solid var(--border-color);">
+    <div class="dashboard-section">
         <h2 style="margin-top: 0; margin-bottom: 1.5rem;">Vacantes</h2>
 
         <!-- Filters -->
-        <div style="margin-bottom: 1.5rem; display: flex; gap: 0.5rem;">
-            <a href="?status=active" class="btn {% if current_filter == 'active' %}btn-primary{% else %}btn-secondary{% endif %}">Activas</a>
-            <a href="?status=on_hold" class="btn {% if current_filter == 'on_hold' %}btn-primary{% else %}btn-secondary{% endif %}">En Pausa</a>
-            <a href="?status=closed" class="btn {% if current_filter == 'closed' %}btn-primary{% else %}btn-secondary{% endif %}">Cerradas</a>
-            <a href="?status=all" class="btn {% if current_filter == 'all' %}btn-primary{% else %}btn-secondary{% endif %}">Todas</a>
+        <div class="filter-group">
+            <a href="?status=active" class="btn {% if current_filter == 'active' %}btn-primary{% else %}btn-outline{% endif %}">Activas</a>
+            <a href="?status=on_hold" class="btn {% if current_filter == 'on_hold' %}btn-primary{% else %}btn-outline{% endif %}">En Pausa</a>
+            <a href="?status=closed" class="btn {% if current_filter == 'closed' %}btn-primary{% else %}btn-outline{% endif %}">Cerradas</a>
+            <a href="?status=all" class="btn {% if current_filter == 'all' %}btn-primary{% else %}btn-outline{% endif %}">Todas</a>
         </div>
 
         <div class="table-responsive">
@@ -78,11 +77,11 @@
     </div>
     
     <!-- Recent Applications -->
-    <div style="background: white; padding: 2rem; border-radius: 8px; border: 1px solid var(--border-color); margin-top: 2rem;">
+    <div class="dashboard-section">
         <h2 style="margin-top: 0; margin-bottom: 1.5rem;">Postulaciones Recientes</h2>
-        <ul style="list-style: none; padding: 0; margin: 0;">
+        <ul class="activity-list">
             {% for app in recent_applications %}
-            <li style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--border-color-light);">
+            <li class="activity-item">
                 <div>
                     <a href="{% url 'application_detail' app.id %}" style="text-decoration: none; font-weight: bold;">{{ app.candidate.first_name }} {{ app.candidate.last_name }}</a>
                     <span style="color: var(--text-muted);">para</span>

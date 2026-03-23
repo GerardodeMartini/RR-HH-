@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div style="max-width: 800px; margin: 0 auto;">
+<div class="content-card">
     <a href="/" style="display: inline-block; margin-bottom: 2rem; color: var(--text-muted);">&larr; Volver a las
         ofertas</a>
 
-    <div style="background: white; padding: 3rem; border-radius: 8px; border: 1px solid var(--border-color);">
+    <div class="vacancy-info-section">
         <span class="tag" style="margin-bottom: 1rem; display: inline-block;">{{ vacancy.company.industry }}</span>
-        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">{{ vacancy.title }}</h1>
+        <h1 style="margin-bottom: 0.5rem;">{{ vacancy.title }}</h1>
         <p style="font-size: 1.25rem; color: var(--text-muted); margin-bottom: 2rem;">en {{ vacancy.company.name }}</p>
 
         <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 2rem 0;">

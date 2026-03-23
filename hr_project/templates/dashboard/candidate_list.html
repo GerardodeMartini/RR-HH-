@@ -1,100 +1,97 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+<div class="container dashboard-container">
+    <div class="dashboard-header">
         <div>
             <h1 style="margin-bottom: 0.5rem;">Base de Talentos</h1>
-            <div style="display: flex; gap: 1rem; align-items: center;">
-                <a href="{% url 'dashboard_home' %}" style="color: var(--text-muted); text-decoration: none;">&larr;
-                    Volver
-                    al Panel</a>
+            <div class="filter-group">
+                <a href="{% url 'dashboard_home' %}" style="color: var(--text-muted); text-decoration: none;">&larr; Volver al Panel</a>
                 <a href="{% url 'add_candidate' %}" class="btn btn-sm btn-primary">
                     <i class="fas fa-plus"></i> Agregar CV
                 </a>
             </div>
         </div>
         <div>
-            <span
-                style="background: #e0f2fe; color: #0369a1; padding: 0.5rem 1rem; border-radius: 9999px; font-weight: 500;">
+            <span class="ui-badge ui-badge-info">
                 {{ candidates.count }} Candidatos Registrados
             </span>
         </div>
     </div>
 
     <!-- Search/Filter -->
-    <div style="margin-bottom: 2rem;">
-        <form method="get" action="." style="display: flex; gap: 1rem; align-items: center;">
+    <div class="search-container">
+        <form method="get" action="." style="display: flex; gap: 1rem; align-items: center; width: 100%;">
             <input type="text" name="q" value="{{ query }}" placeholder="Buscar por nombre, email o habilidad..."
-                class="form-control"
-                style="max-width: 400px; padding: 0.8rem; border: 1px solid #e5e7eb; border-radius: 6px;">
+                class="search-input" style="flex: 1;">
             {% if query %}
-            <a href="." style="color: #2563eb; text-decoration: none; font-weight: 500;">Ver lista completa</a>
+            <a href="." style="color: var(--accent-color); text-decoration: none; font-weight: 500;">Ver lista completa</a>
             {% endif %}
+            <button type="submit" class="btn btn-primary" style="padding: 0.6rem 1.2rem;">Buscar</button>
         </form>
     </div>
 
-    <div class="card"
-        style="overflow-x: auto; background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+    <div class="data-table-container">
+        <table class="data-table">
             <thead>
-                <tr style="background: #f9fafb; border-bottom: 1px solid #e5e7eb;">
-                    <th style="padding: 1rem; font-weight: 600; color: #374151;">Nombre</th>
-                    <th style="padding: 1rem; font-weight: 600; color: #374151;">Información de Contacto</th>
-                    <th style="padding: 1rem; font-weight: 600; color: #374151;">Habilidades</th>
-                    <th style="padding: 1rem; font-weight: 600; color: #374151;">CV</th>
-                    <th style="padding: 1rem; font-weight: 600; color: #374151;">Estado</th>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Contacto</th>
+                    <th>Habilidades</th>
+                    <th>CV</th>
+                    <th>Estado</th>
                 </tr>
             </thead>
             <tbody>
                 {% for candidate in candidates %}
-                <tr style="border-bottom: 1px solid #e5e7eb;">
-                    <td style="padding: 1rem;">
-                        <div style="font-weight: 500; color: #111827;">
+                <tr>
+                    <td>
+                        <div style="font-weight: bold; color: var(--primary-color);">
                             {{ candidate.first_name }} {{ candidate.last_name }}
                         </div>
-                        Agregado: {{ candidate.created_at|date:"d M Y" }}
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">
+                            Agregado: {{ candidate.created_at|date:"d M Y" }}
+                        </div>
+                    </td>
+                    <td>
+                        <div>{{ candidate.email }}</div>
+                        <div style="color: var(--text-muted); font-size: 0.85rem;">{{ candidate.phone|default:"-" }}</div>
+                    </td>
+                    <td>
+                        {% if candidate.skills %}
+                        <div style="max-width: 250px; font-size: 0.85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ candidate.skills }}">
+                            {{ candidate.skills }}
+                        </div>
+                        {% else %}
+                        <span style="color: #ccc;">-</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if candidate.resume_file %}
+                        <a href="{{ candidate.resume_file.url }}" target="_blank"
+                            style="color: var(--accent-color); font-weight: 600;">Ver CV 📄</a>
+                        {% else %}
+                        <span style="color: #ccc; font-size: 0.85rem;">Sin CV</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if candidate.availability_status == 'active' %}
+                        <span class="ui-badge ui-badge-success">Activo</span>
+                        {% else %}
+                        <span class="ui-badge ui-badge-neutral">No busca</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="padding: 3rem; text-align: center; color: var(--text-muted);">
+                        No hay candidatos registrados aún.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-    </td>
-    <td style="padding: 1rem;">
-        <div>{{ candidate.email }}</div>
-        <div style="color: #6b7280; font-size: 0.9rem;">{{ candidate.phone|default:"-" }}</div>
-    </td>
-    <td style="padding: 1rem;">
-        {% if candidate.skills %}
-        <div style="max-width: 300px; font-size: 0.9rem;">{{ candidate.skills }}</div>
-        {% else %}
-        <span style="color: #9ca3af;">-</span>
-        {% endif %}
-    </td>
-    <td style="padding: 1rem;">
-        {% if candidate.resume_file %}
-        <a href="{{ candidate.resume_file.url }}" target="_blank"
-            style="color: #2563eb; font-weight: 500; text-decoration: none;">Ver CV 📄</a>
-        {% else %}
-        <span style="color: #9ca3af; font-size: 0.9rem;">Sin CV</span>
-        {% endif %}
-    </td>
-    <td style="padding: 1rem;">
-        {% if candidate.availability_status == 'active' %}
-        <span
-            style="background: #dcfce7; color: #166534; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.85rem; font-weight: 500;">Activo</span>
-        {% else %}
-        <span
-            style="background: #f3f4f6; color: #4b5563; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.85rem; font-weight: 500;">No
-            busca</span>
-        {% endif %}
-    </td>
-    </tr>
-    {% empty %}
-    <tr>
-        <td colspan="5" style="padding: 3rem; text-align: center; color: #6b7280;">
-            No hay candidatos registrados aún.
-        </td>
-    </tr>
-    {% endfor %}
-    </tbody>
-    </table>
 </div>
 </div>
 {% endblock %}

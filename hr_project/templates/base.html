@@ -47,7 +47,15 @@
         <div class="top-nav-container">
             <nav class="nav-links">
                 {% if user.is_authenticated %}
-                <span style="margin-right: 1rem; color: #64748b; font-size: 0.85rem;">Hola, {{ user }}</span>
+                <span style="margin-right: 1rem; color: #64748b; font-size: 0.85rem;">
+                    {% if user.is_staff %}
+                    Hola Marina
+                    {% elif user.first_name %}
+                    Hola, {{ user.first_name }}
+                    {% else %}
+                    Hola, {{ user.username }}
+                    {% endif %}
+                </span>
 
                 {% if user.company_profile %}
                 <a href="{% url 'client_portal' %}">Empresas</a>
