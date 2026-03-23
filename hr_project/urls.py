@@ -16,7 +16,7 @@ urlpatterns = [
     path('staff/', include('dashboard.urls')),
 
     # Client / Company Portal
-    path('company/', include('clients.urls')),
+    path('empresas/', include('clients.urls')),
     
     # Candidate Portal
     path('candidate/', include('candidates.urls')),
