@@ -49,6 +49,12 @@ def add_candidate_view(request):
             candidate.save()
             form.save_m2m() # For tags if any
             
+            try:
+                from utils.document_converter import ensure_pdf_resume
+                ensure_pdf_resume(candidate)
+            except ImportError:
+                pass
+            
             action_msg = 'actualizado' if instance else 'agregado'
             messages.success(request, f'Candidato {action_msg} correctamente.')
             return redirect('staff_candidate_list')
