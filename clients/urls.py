@@ -13,7 +13,6 @@ urlpatterns = [
     path('activate/<uidb64>/<token>/', portal_views.activate_company, name='activate_company'),
     path('create-vacancy/', portal_views.create_vacancy, name='create_vacancy'),
     path('profile/', portal_views.company_profile, name='company_profile'),
-    path('talent-pool/', portal_views.talent_pool, name='talent_pool'),
     # Logout for clients
     path('logout/', custom_logout, {'next_page': 'client_login'}, name='client_logout'),
 ]

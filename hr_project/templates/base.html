@@ -77,7 +77,7 @@
 
                 {% else %}
                 <a href="/">Oportunidades</a>
-                <a href="/candidates/login/">Soy Candidato</a>
+                <a href="{% url 'candidate_login' %}">Soy Candidato</a>
                 <a href="{% url 'client_login' %}">Soy Empresa</a>
                 <a href="{% url 'dashboard_login' %}" class="logout-btn-small">Acceso Staff</a>
                 

@@ -19,7 +19,7 @@ urlpatterns = [
     path('empresas/', include('clients.urls')),
     
     # Candidate Portal
-    path('candidate/', include('candidates.urls')),
+    path('candidates/', include('candidates.urls')),
 
     # --- Main Site (Vistas Públicas) ---
     path('', client_views.vacancy_list, name='home'),
