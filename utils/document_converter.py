@@ -4,11 +4,64 @@ import tempfile
 import subprocess
 from django.core.files import File
 
+def convert_to_pdf_if_needed(file_path):
+    """
+    Si es un doc o docx, lo convierte a pdf y devuelve el nuevo path local temporal.
+    Si ya es pdf, o falla, devuelve la ruta original.
+    Importante: No borra el archivo original, queda a cargo del llamador.
+    """
+    ext = os.path.splitext(file_path)[1].lower()
+    if ext not in ['.doc', '.docx']:
+        return file_path
+        
+    is_windows = os.name == 'nt'
+    base_name = os.path.splitext(os.path.basename(file_path))[0]
+    out_dir = os.path.dirname(file_path)
+    pdf_path = os.path.join(out_dir, f"{base_name}.pdf")
+    
+    # 1. Windows: docx2pdf
+    if is_windows:
+        try:
+            from docx2pdf import convert
+            convert(file_path, pdf_path)
+            if os.path.exists(pdf_path):
+                return pdf_path
+        except Exception:
+            pass
+            
+    # 2. LibreOffice Fallback
+    cmd = 'soffice'
+    if is_windows:
+        common_paths = [
+            r"C:\Program Files\LibreOffice\program\soffice.exe",
+            r"C:\Program Files (x86)\LibreOffice\program\soffice.exe"
+        ]
+        for p in common_paths:
+            if os.path.exists(p):
+                cmd = p
+                break
+                
+    command = [
+        cmd,
+        '--headless',
+        '--convert-to', 'pdf',
+        '--outdir', out_dir,
+        file_path
+    ]
+    
+    try:
+        result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=60)
+        if result.returncode == 0 and os.path.exists(pdf_path):
+            return pdf_path
+    except FileNotFoundError:
+        pass
+        
+    return file_path
+
 def ensure_pdf_resume(candidate):
     """
     Asegura que el CV subido sea un PDF.
-    Si es doc/docx, intenta convertirlo usando LibreOffice.
-    Requiere libreoffice instalado en el sistema (ej. libreoffice-writer).
+    Si es doc/docx, intenta convertirlo usando LibreOffice o Word.
     """
     if not candidate.resume_file:
         return False
@@ -20,81 +73,31 @@ def ensure_pdf_resume(candidate):
     if ext not in ['.doc', '.docx']:
         return False
         
-    # Necesitamos que el archivo esté guardado en disco para que LibreOffice lo lea
     try:
-        file_path = candidate.resume_file.path
+        original_path = candidate.resume_file.path
     except NotImplementedError:
-        # Pasa si el archivo no está guardado aún localmente de forma adecuada
         return False
         
-    if not os.path.exists(file_path):
+    if not os.path.exists(original_path):
         return False
         
     try:
-        with tempfile.TemporaryDirectory() as tmpdir:
-            is_windows = os.name == 'nt'
-            base_name = os.path.splitext(os.path.basename(file_path))[0]
-            pdf_path = os.path.join(tmpdir, f"{base_name}.pdf")
-            conversion_success = False
-            
-            # 1. En Windows, si tienen Word instalado, intentamos con docx2pdf primero
-            if is_windows:
-                try:
-                    # Importamos dinámicamente para no romper en Linux (Docker)
-                    from docx2pdf import convert
-                    # Ignorar salida COM que pueda romper stdout
-                    convert(file_path, pdf_path)
-                    
-                    if os.path.exists(pdf_path):
-                        conversion_success = True
-                except Exception as docx_e:
-                    print(f"No se pudo usar docx2pdf u Office nativo: {docx_e}")
-                    pass
-            
-            # 2. Si falló (ej. no está en Windows o docx2pdf falló), intentamos con LibreOffice
-            if not conversion_success:
-                cmd = 'soffice'
-                if is_windows:
-                    common_paths = [
-                        r"C:\Program Files\LibreOffice\program\soffice.exe",
-                        r"C:\Program Files (x86)\LibreOffice\program\soffice.exe"
-                    ]
-                    for p in common_paths:
-                        if os.path.exists(p):
-                            cmd = p
-                            break
+        pdf_path = convert_to_pdf_if_needed(original_path)
+        
+        if pdf_path != original_path and os.path.exists(pdf_path):
+            base_name = os.path.splitext(os.path.basename(original_path))[0]
+            with open(pdf_path, 'rb') as pdf_file:
+                new_filename = f"{uuid.uuid4().hex[:8]}_{base_name}.pdf"
+                candidate.resume_file.save(new_filename, File(pdf_file), save=True)
                 
-                command = [
-                    cmd,
-                    '--headless',
-                    '--convert-to', 'pdf',
-                    '--outdir', tmpdir,
-                    file_path
-                ]
+            try:
+                os.remove(original_path)
+                os.remove(pdf_path) # Clean up the generic one generated by convert_to_pdf_if_needed
+            except OSError:
+                pass
                 
-                try:
-                    result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=60)
-                    if result.returncode == 0 and os.path.exists(pdf_path):
-                        conversion_success = True
-                    else:
-                        print(f"Error de LibreOffice: {result.stderr.decode()}")
-                except FileNotFoundError:
-                    print("LibreOffice no encontrado. No se pudo convertir a PDF.")
+            return True
             
-            if conversion_success and os.path.exists(pdf_path):
-                # Guarda el nuevo archivo PDF sobreescribiendo la referencia actual
-                with open(pdf_path, 'rb') as pdf_file:
-                    new_filename = f"{uuid.uuid4().hex[:8]}_{base_name}.pdf"
-                    candidate.resume_file.save(new_filename, File(pdf_file), save=True)
-                    
-                # Borra el archivo original opcionalmente
-                try:
-                    os.remove(file_path)
-                except OSError:
-                    pass
-                    
-                return True
-                
     except Exception as e:
         print(f"Error en conversión de documento: {e}")
         return False

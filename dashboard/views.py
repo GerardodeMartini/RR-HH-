@@ -268,11 +268,19 @@ def parse_resume_view(request):
         full_temp_path = os.path.join(settings.MEDIA_ROOT, temp_path)
         
         try:
-            data = extract_candidate_data(full_temp_path)
+            from utils.document_converter import convert_to_pdf_if_needed
+            pdf_path_to_analyze = convert_to_pdf_if_needed(full_temp_path)
             
-            # Cleanup temp file
-            if os.path.exists(full_temp_path):
-                os.remove(full_temp_path)
+            data = extract_candidate_data(pdf_path_to_analyze)
+            
+            # Cleanup temp files
+            try:
+                if os.path.exists(full_temp_path):
+                    os.remove(full_temp_path)
+                if pdf_path_to_analyze != full_temp_path and os.path.exists(pdf_path_to_analyze):
+                    os.remove(pdf_path_to_analyze)
+            except OSError:
+                pass
             
             if "error" in data:
                 return JsonResponse({'success': False, 'error': data['error']})
