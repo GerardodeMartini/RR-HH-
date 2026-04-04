@@ -2,8 +2,8 @@ import os
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 
-# Constante para forzar que llegue a Gerardo
-MODO_PRUEBA_BCC = 'gerardodemartini@gmail.com'
+# Constante para forzar que llegue a Marina
+MODO_PRUEBA_BCC = 'zubianiasociados@gmail.com'
 
 def get_base_html(title, message, button_text=None, button_url=None):
     """
