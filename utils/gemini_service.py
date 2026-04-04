@@ -203,6 +203,10 @@ def extract_candidate_data(file_path):
 
         if not os.path.exists(file_path):
              return {"error": "Archivo no encontrado."}
+             
+        ext = os.path.splitext(file_path)[1].lower()
+        if ext in ['.doc', '.docx']:
+             return {"error": "El servidor no pudo convertir el Word a PDF. Por favor, sube el CV directamente en formato PDF."}
 
         # Upload file (using the same logic as analyze_application)
         uploaded_file = client.files.upload(
