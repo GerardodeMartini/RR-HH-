@@ -139,7 +139,7 @@ def send_staff_new_application(application):
     vacancy = application.vacancy
     message = f"El candidato <strong>{candidate.first_name} {candidate.last_name}</strong> se ha postulado a la vacante <strong>{vacancy.title}</strong>.<br><br>Ver el perfil en el dashboard."
     html = get_base_html(title, message, "Ver Postulación", f"https://zubianirrhh.com.ar/staff/application/{application.id}/")
-    send_stylized_email(subject, "zubianiasociados@zubianirrhh.com.ar", html)
+    send_stylized_email(subject, "zubianiasociados@gmail.com", html)
 
 def send_staff_new_vacancy(vacancy):
     subject = "[ALERTA] Nueva Solicitud de Vacante"
@@ -147,4 +147,4 @@ def send_staff_new_vacancy(vacancy):
     company_name = vacancy.company.name if vacancy.company else "Empresa"
     message = f"La empresa <strong>{company_name}</strong> ha cargado una nueva búsqueda: <strong>{vacancy.title}</strong>.<br><br>Por favor, revisarla en los paneles de administración."
     html = get_base_html(title, message, "Ir al Dashboard", "https://zubianirrhh.com.ar/staff/")
-    send_stylized_email(subject, "zubianiasociados@zubianirrhh.com.ar", html)
+    send_stylized_email(subject, "zubianiasociados@gmail.com", html)
