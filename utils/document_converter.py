@@ -32,43 +32,56 @@ def ensure_pdf_resume(candidate):
         
     try:
         with tempfile.TemporaryDirectory() as tmpdir:
-            # Comando para modo headless de LibreOffice
-            # En windows podría ser 'soffice.exe' o estar en una ruta específica
             is_windows = os.name == 'nt'
-            cmd = 'soffice'
-            if is_windows:
-                # Intenta rutas comunes o simplemente asume que está en el PATH
-                common_paths = [
-                    r"C:\Program Files\LibreOffice\program\soffice.exe",
-                    r"C:\Program Files (x86)\LibreOffice\program\soffice.exe"
-                ]
-                for p in common_paths:
-                    if os.path.exists(p):
-                        cmd = p
-                        break
-            
-            command = [
-                cmd,
-                '--headless',
-                '--convert-to', 'pdf',
-                '--outdir', tmpdir,
-                file_path
-            ]
-            
-            try:
-                result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=60)
-            except FileNotFoundError:
-                print("LibreOffice no encontrado. No se pudo convertir a PDF.")
-                return False
-                
-            if result.returncode != 0:
-                print(f"Error de LibreOffice: {result.stderr.decode()}")
-                return False
-                
             base_name = os.path.splitext(os.path.basename(file_path))[0]
             pdf_path = os.path.join(tmpdir, f"{base_name}.pdf")
+            conversion_success = False
             
-            if os.path.exists(pdf_path):
+            # 1. En Windows, si tienen Word instalado, intentamos con docx2pdf primero
+            if is_windows:
+                try:
+                    # Importamos dinámicamente para no romper en Linux (Docker)
+                    from docx2pdf import convert
+                    # Ignorar salida COM que pueda romper stdout
+                    convert(file_path, pdf_path)
+                    
+                    if os.path.exists(pdf_path):
+                        conversion_success = True
+                except Exception as docx_e:
+                    print(f"No se pudo usar docx2pdf u Office nativo: {docx_e}")
+                    pass
+            
+            # 2. Si falló (ej. no está en Windows o docx2pdf falló), intentamos con LibreOffice
+            if not conversion_success:
+                cmd = 'soffice'
+                if is_windows:
+                    common_paths = [
+                        r"C:\Program Files\LibreOffice\program\soffice.exe",
+                        r"C:\Program Files (x86)\LibreOffice\program\soffice.exe"
+                    ]
+                    for p in common_paths:
+                        if os.path.exists(p):
+                            cmd = p
+                            break
+                
+                command = [
+                    cmd,
+                    '--headless',
+                    '--convert-to', 'pdf',
+                    '--outdir', tmpdir,
+                    file_path
+                ]
+                
+                try:
+                    result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=60)
+                    if result.returncode == 0 and os.path.exists(pdf_path):
+                        conversion_success = True
+                    else:
+                        print(f"Error de LibreOffice: {result.stderr.decode()}")
+                except FileNotFoundError:
+                    print("LibreOffice no encontrado. No se pudo convertir a PDF.")
+            
+            if conversion_success and os.path.exists(pdf_path):
                 # Guarda el nuevo archivo PDF sobreescribiendo la referencia actual
                 with open(pdf_path, 'rb') as pdf_file:
                     new_filename = f"{uuid.uuid4().hex[:8]}_{base_name}.pdf"
