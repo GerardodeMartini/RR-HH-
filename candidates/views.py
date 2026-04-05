@@ -66,6 +66,11 @@ def candidate_register(request):
 
 @login_required
 def candidate_dashboard(request):
+    # Block staff and company users from accessing the candidate portal
+    if request.user.is_staff or hasattr(request.user, 'company_profile'):
+        messages.error(request, 'Este portal es exclusivo para candidatos.')
+        return redirect('vacancy_list')
+        
     # Ensure user has a candidate profile
     candidate, created = Candidate.objects.get_or_create(user=request.user)
     
