@@ -309,3 +309,30 @@ def dashboard_settings(request):
             return redirect('dashboard_settings')
             
     return render(request, 'dashboard/settings.html', {'settings': settings_obj})
+
+from dashboard.forms import StaffVacancyForm
+from clients.models import Company
+
+@login_required
+@user_passes_test(is_recruiter)
+def add_vacancy_staff(request):
+    if request.method == 'POST':
+        form = StaffVacancyForm(request.POST)
+        if form.is_valid():
+            vacancy = form.save(commit=False)
+            company_selector = form.cleaned_data.get('company_selector')
+            new_company_name = form.cleaned_data.get('new_company_name')
+
+            if company_selector:
+                vacancy.company = company_selector
+            elif new_company_name:
+                company = Company.objects.create(name=new_company_name)
+                vacancy.company = company
+                
+            vacancy.save()
+            messages.success(request, f'La oferta "{vacancy.title}" ha sido publicada correctamente.')
+            return redirect('dashboard_home')
+    else:
+        form = StaffVacancyForm()
+        
+    return render(request, 'dashboard/add_vacancy.html', {'form': form})

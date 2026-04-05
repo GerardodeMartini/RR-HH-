@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Publicar Nueva Oferta Laboral{% endblock %}
+
+{% block content %}
+<div class="container dashboard-container">
+    <div class="dashboard-header" style="margin-bottom: 2rem;">
+        <h1 style="margin: 0;">Publicar Oferta (Staff)</h1>
+        <a href="{% url 'dashboard_home' %}" class="btn btn-outline">&larr; Volver al Panel</a>
+    </div>
+
+    <div class="dashboard-section" style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" style="padding: 1rem; margin-bottom: 1rem; border-radius: 4px; background-color: var(--card-bg); border-left: 4px solid var(--primary-color);">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <p style="color: var(--text-muted); margin-bottom: 2rem;">Utiliza este formulario para cargar rápidamente una vacante. Selecciona una empresa ya existente en el sistema, o simplemente escribe el nombre de la nueva empresa para crearla instantáneamente sin requerir registro.</p>
+
+        <form method="POST" class="auth-form">
+            {% csrf_token %}
+            
+            <h3 style="margin-bottom: 1rem; color: var(--primary-color);">Datos de la Empresa</h3>
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label for="{{ form.company_selector.id_for_label }}">{{ form.company_selector.label }}</label>
+                {{ form.company_selector }}
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 2rem;">
+                <label for="{{ form.new_company_name.id_for_label }}">{{ form.new_company_name.label }}</label>
+                {{ form.new_company_name }}
+                {% if form.new_company_name.help_text %}
+                <small style="color: var(--text-muted); display: block; margin-top: 0.5rem;">{{ form.new_company_name.help_text }}</small>
+                {% endif %}
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 2rem 0;">
+
+            <h3 style="margin-bottom: 1rem; color: var(--primary-color);">Detalles del Puesto</h3>
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label for="{{ form.title.id_for_label }}">{{ form.title.label }}</label>
+                {{ form.title }}
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+                {{ form.description }}
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 2rem;">
+                <label for="{{ form.required_skills.id_for_label }}">{{ form.required_skills.label }}</label>
+                {{ form.required_skills }}
+            </div>
+
+            {% if form.errors %}
+                <div style="color: red; margin-bottom: 1rem;">
+                    Revisa los errores e intenta nuevamente. {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1.1rem; border-radius: 8px;">
+                Publicar Oferta Laboral
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

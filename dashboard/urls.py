@@ -10,6 +10,9 @@ urlpatterns = [
     path('board/<int:vacancy_id>/', views.kanban_board, name='kanban_board'),
     path('board/<int:vacancy_id>/close/', views.close_vacancy, name='close_vacancy'),
     
+    # Vacancies
+    path('vacantes/agregar/', views.add_vacancy_staff, name='staff_add_vacancy'),
+    
     # AI & Settings
     path('application/<int:application_id>/', views.application_detail, name='application_detail'),
     path('application/<int:application_id>/status/', views.update_application_status, name='update_application_status'),
