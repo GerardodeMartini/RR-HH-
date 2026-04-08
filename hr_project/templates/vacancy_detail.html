@@ -88,8 +88,13 @@
                 </div>
                 {% endif %}
 
-                <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem;">Enviar
-                    Postulación</button>
+                <!-- Cloudflare Turnstile -->
+                <div style="margin: 1.5rem 0;">
+                    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+                    <div class="cf-turnstile" data-sitekey="{{ TURNSTILE_SITE_KEY }}" data-theme="light"></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem;">Enviar Postulación</button>
             </form>
             {% endif %}
         </div>

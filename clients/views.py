@@ -4,6 +4,7 @@ from candidates.models import Candidate
 from applications.models import Application, Answer
 from utils.emails import send_candidate_application, send_staff_new_application
 from django.contrib import messages
+from utils.turnstile import validate_turnstile
 
 def vacancy_list(request):
     vacancies = Vacancy.objects.filter(status='active').order_by('-created_at')
@@ -20,6 +21,12 @@ def vacancy_detail(request, vacancy_id):
         if is_staff:
             # Maybe add a message here in the future if needed
             return redirect('home')
+
+        # Turnstile validation
+        turnstile_result = validate_turnstile(request)
+        if not turnstile_result.get('success'):
+            messages.error(request, turnstile_result.get('error', 'Error de verificación de seguridad (Captcha).'))
+            return redirect('vacancy_detail', vacancy_id=vacancy.id)
 
         # 1. Check existing Candidate
         email = request.POST.get('email')

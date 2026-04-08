@@ -31,6 +31,12 @@ class CompanyLoginView(LoginView):
 
 def company_register(request):
     if request.method == 'POST':
+        # Turnstile validation
+        turnstile_result = validate_turnstile(request)
+        if not turnstile_result.get('success'):
+            messages.error(request, turnstile_result.get('error', 'Error de verificación de seguridad (Captcha).'))
+            return render(request, 'clients/register.html', {'form': CompanyRegisterForm(request.POST)})
+
         form = CompanyRegisterForm(request.POST)
         if form.is_valid():
             user = form.save()

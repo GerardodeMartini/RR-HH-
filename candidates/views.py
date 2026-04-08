@@ -28,9 +28,16 @@ from django.contrib import messages
 from applications.models import Application
 from .forms import CandidateProfileForm, CandidateRegisterForm
 from utils.emails import send_candidate_welcome
+from utils.turnstile import validate_turnstile
 
 def candidate_login(request):
     if request.method == 'POST':
+        # Turnstile validation
+        turnstile_result = validate_turnstile(request)
+        if not turnstile_result.get('success'):
+            messages.error(request, turnstile_result.get('error', 'Error de verificación de seguridad (Captcha).'))
+            return render(request, 'candidates/login.html', {'form': AuthenticationForm()})
+
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
@@ -42,6 +49,12 @@ def candidate_login(request):
 
 def candidate_register(request):
     if request.method == 'POST':
+        # Turnstile validation
+        turnstile_result = validate_turnstile(request)
+        if not turnstile_result.get('success'):
+            messages.error(request, turnstile_result.get('error', 'Error de verificación de seguridad (Captcha).'))
+            return render(request, 'candidates/register.html', {'form': CandidateRegisterForm(request.POST)})
+
         form = CandidateRegisterForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
