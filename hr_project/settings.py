@@ -73,6 +73,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'utils.middleware.RoleSessionTimeoutMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -90,6 +91,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'utils.context_processors.turnstile_keys',
+                'utils.context_processors.session_timeout_info',
             ],
         },
     },
@@ -158,11 +160,13 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER') # Login de SMTP de Brevo
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD') # Master Password o SMTP key de Brevo
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@tudominio.com') # Remitente verificado en Brevo
 
-# Security Settings
+# Security & Session Settings
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
+SESSION_SAVE_EVERY_REQUEST = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 if not DEBUG:
     SECURE_HSTS_SECONDS = 31536000  # 1 year

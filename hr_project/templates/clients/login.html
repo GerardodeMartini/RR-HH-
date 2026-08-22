@@ -45,7 +45,8 @@
     </form>
 
     <div style="text-align: center; margin-top: 1.5rem; border-top: 1px solid #e5e7eb; padding-top: 1.5rem;">
-        <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 1rem;">¿Aún no tienes cuenta?</p>
+        <p style="margin-bottom: 1rem;"><a href="{% url 'password_reset' %}" style="color: #2563eb; font-size: 0.9rem; text-decoration: none; font-weight: 500;">¿Olvidaste tu contraseña? Presiona aquí</a></p>
+        <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 0.75rem;">¿Aún no tienes cuenta?</p>
         <a href="{% url 'client_register' %}" class="btn"
             style="display: inline-block; width: 100%; text-align: center; background-color: white; color: var(--text-color); border: 1px solid #d1d5db; text-decoration: none; padding: 0.6rem 1rem; border-radius: 6px; font-weight: 500; transition: all 0.2s;">
             Registrar Empresa

@@ -30,9 +30,9 @@
         <button type="submit" class="btn btn-primary" style="width: 100%;">Ingresar</button>
     </form>
 
-    <div style="margin-top: 1.5rem;">
-        <p>¿No tienes cuenta? <a href="{% url 'candidate_register' %}" style="color: var(--accent-color);">Regístrate
-                aquí</a></p>
+    <div style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem;">
+        <p style="margin: 0;"><a href="{% url 'password_reset' %}" style="color: #2563eb; text-decoration: none; font-weight: 500;">¿Olvidaste tu contraseña? Presiona aquí</a></p>
+        <p style="margin: 0; color: var(--text-muted);">¿No tienes cuenta? <a href="{% url 'candidate_register' %}" style="color: var(--accent-color); font-weight: 600;">Regístrate aquí</a></p>
     </div>
 </div>
 {% endblock %}

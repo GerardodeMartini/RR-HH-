@@ -147,6 +147,19 @@
             <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
 
+                {% if form.errors %}
+                <div style="background-color: #fee2e2; border: 1px solid #f87171; color: #991b1b; padding: 0.75rem; border-radius: 6px; margin-bottom: 1rem; font-size: 0.875rem; text-align: left;">
+                    <strong>Por favor corrige los siguientes errores:</strong>
+                    <ul style="margin: 0.5rem 0 0 1rem; padding: 0;">
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <li><strong>{{ field|capfirst }}:</strong> {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
                 <div class="form-group">
                     <label>Nombre</label>
                     {{ form.first_name }}

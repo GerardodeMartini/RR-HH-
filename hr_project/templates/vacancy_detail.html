@@ -65,9 +65,9 @@
                     <label>CV / Currículum (PDF/Word)</label>
                     {% if candidate and candidate.resume_file %}
                         <p style="font-size: 0.9rem; color: #2563eb; margin-bottom: 0.5rem;">📁 Ya tienes un currículum cargado en tu perfil. Sube uno nuevo solo si deseas actualizarlo para esta postulación.</p>
-                        <input type="file" name="resume">
+                        <input type="file" name="resume" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
                     {% else %}
-                        <input type="file" name="resume" required>
+                        <input type="file" name="resume" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required>
                     {% endif %}
                 </div>
 

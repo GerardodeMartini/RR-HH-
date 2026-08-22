@@ -163,6 +163,34 @@
                 icon.classList.add('fa-eye');
             }
         }
+
+        {% if user.is_authenticated and SESSION_TIMEOUT_SECONDS %}
+        (function() {
+            const timeoutMs = {{ SESSION_TIMEOUT_SECONDS }} * 1000;
+            let idleTimer;
+
+            function resetTimer() {
+                clearTimeout(idleTimer);
+                idleTimer = setTimeout(onIdleTimeout, timeoutMs);
+            }
+
+            function onIdleTimeout() {
+                alert("Tu sesión ha expirado tras {{ SESSION_TIMEOUT_MINUTES }} minutos de inactividad por motivos de seguridad.");
+                const logoutForm = document.querySelector('form[action="{% url 'logout' %}"]');
+                if (logoutForm) {
+                    logoutForm.submit();
+                } else {
+                    window.location.href = "{% url 'logout' %}";
+                }
+            }
+
+            ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'].forEach(evt => {
+                window.addEventListener(evt, resetTimer, { passive: true });
+            });
+
+            resetTimer();
+        })();
+        {% endif %}
     </script>
 </body>
 

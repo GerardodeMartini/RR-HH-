@@ -96,7 +96,10 @@ def candidate_dashboard(request):
                 ensure_pdf_resume(candidate_obj)
             except ImportError:
                 pass
+            messages.success(request, '¡Perfil y CV actualizados correctamente!')
             return redirect('candidate_dashboard')
+        else:
+            messages.error(request, 'Hubo un error al guardar los datos del perfil. Por favor revisa los campos en rojo.')
     else:
         form = CandidateProfileForm(instance=candidate)
     
