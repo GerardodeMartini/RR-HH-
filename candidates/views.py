@@ -61,11 +61,12 @@ def candidate_register(request):
             user.is_active = False # Deactivate until email verification
             user.save()
             
-            # Link candidate profile to user
+            # Link candidate profile to user with real name
             candidate_obj = Candidate.objects.create(
                 user=user, 
                 email=user.email,
-                first_name=user.username
+                first_name=user.first_name,
+                last_name=user.last_name
             )
             
             from utils.emails import send_activation_email
@@ -86,6 +87,14 @@ def candidate_dashboard(request):
         
     # Ensure user has a candidate profile
     candidate, created = Candidate.objects.get_or_create(user=request.user)
+    if candidate.first_name == request.user.username:
+        if request.user.first_name and request.user.first_name != request.user.username:
+            candidate.first_name = request.user.first_name
+            candidate.last_name = request.user.last_name
+            candidate.save()
+        else:
+            candidate.first_name = ""
+            candidate.save()
     
     if request.method == 'POST':
         form = CandidateProfileForm(request.POST, request.FILES, instance=candidate)

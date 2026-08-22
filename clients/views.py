@@ -10,6 +10,9 @@ def vacancy_list(request):
     vacancies = Vacancy.objects.filter(status='active').order_by('-created_at')
     return render(request, 'vacancy_list.html', {'vacancies': vacancies})
 
+def faq_view(request):
+    return render(request, 'faq.html')
+
 def vacancy_detail(request, vacancy_id):
     vacancy = get_object_or_404(Vacancy, id=vacancy_id)
     

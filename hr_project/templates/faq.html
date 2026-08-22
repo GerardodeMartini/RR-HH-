@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .help-header {
+        text-align: center;
+        margin: 3rem 0 2.5rem 0;
+    }
+    .help-header h1 {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 0.5rem;
+    }
+    .help-header p {
+        color: #6b7280;
+        font-size: 1.1rem;
+    }
+    .help-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+    .help-card {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 1.75rem;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .help-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.08);
+    }
+    .help-card-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+    .help-card h3 {
+        margin: 0 0 0.75rem 0;
+        font-size: 1.25rem;
+        color: #111827;
+    }
+    .step-list {
+        margin: 0;
+        padding-left: 1.25rem;
+        color: #4b5563;
+        line-height: 1.7;
+    }
+    .step-list li {
+        margin-bottom: 0.5rem;
+    }
+    .whatsapp-banner {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+</style>
+
+<div class="container" style="max-width: 1000px; padding: 0 1rem;">
+    <div class="help-header">
+        <h1>💡 Centro de Ayuda y Guías Rápida</h1>
+        <p>Aprende paso a paso cómo usar la plataforma de forma fácil y rápida.</p>
+    </div>
+
+    <!-- Guías Principales -->
+    <div class="help-grid">
+        <!-- Tarjeta 1: Crear Cuenta -->
+        <div class="help-card">
+            <div class="help-card-icon">👤</div>
+            <h3>1. ¿Cómo me registro por primera vez?</h3>
+            <ol class="step-list">
+                <li>Presiona en el menú de arriba la opción <strong>"Soy Candidato"</strong> o <strong>"Soy Empresa"</strong>.</li>
+                <li>Toca en <strong>"Regístrate aquí"</strong>.</li>
+                <li>Ingresa tu <strong>Nombre, Apellido, Usuario, Email y Contraseña</strong>.</li>
+                <li>Revisa tu correo electrónico para presionar el enlace de <strong>"Activar mi cuenta"</strong>.</li>
+                <li>¡Listo! Ya puedes ingresar con tu Usuario y Contraseña.</li>
+            </ol>
+        </div>
+
+        <!-- Tarjeta 2: Recuperar Clave -->
+        <div class="help-card">
+            <div class="help-card-icon">🔑</div>
+            <h3>2. ¿Cómo recupero mi clave si la olvidé?</h3>
+            <ol class="step-list">
+                <li>En la pantalla para ingresar a tu cuenta, presiona donde dice <strong>"¿Olvidaste tu contraseña? Presiona aquí"</strong>.</li>
+                <li>Escribe la dirección de correo electrónico con la que te registraste y presiona <strong>"Enviar"</strong>.</li>
+                <li>Abre tu correo electrónico y busca el mensaje de <em>Zubiani Asociados</em>.</li>
+                <li>Haz clic en el botón <strong>"Restablecer mi Contraseña"</strong>.</li>
+                <li>Escribe tu nueva contraseña dos veces y presiona guardar.</li>
+            </ol>
+        </div>
+
+        <!-- Tarjeta 3: Subir CV en Celular -->
+        <div class="help-card">
+            <div class="help-card-icon">📄</div>
+            <h3>3. ¿Cómo subo mi CV desde el celular?</h3>
+            <ol class="step-list">
+                <li>Ingresa a tu cuenta de Candidato e ve a <strong>"Mi Perfil"</strong>.</li>
+                <li>En la casilla <strong>"CV / Currículum"</strong> presiona el botón <strong>"Elegir archivo"</strong>.</li>
+                <li>En tu teléfono (iPhone o Android), se abrirá la aplicación <strong>Archivos / Documentos</strong>.</li>
+                <li>Selecciona tu archivo en formato PDF o Word (.pdf / .docx).</li>
+                <li>Presiona el botón azul <strong>"Guardar Cambios"</strong> abajo de todo.</li>
+            </ol>
+        </div>
+
+        <!-- Tarjeta 4: Postularse a Empleos -->
+        <div class="help-card">
+            <div class="help-card-icon">💼</div>
+            <h3>4. ¿Cómo me postulo a una vacante laboral?</h3>
+            <ol class="step-list">
+                <li>Ve a la sección <strong>"Oportunidades"</strong> en el menú superior.</li>
+                <li>Elige el trabajo que te interese y toca en <strong>"Ver y Postularse"</strong>.</li>
+                <li>Verifica que tus datos y tu CV estén cargados correctamente.</li>
+                <li>Responde las preguntas simples de selección si la vacante las requiere.</li>
+                <li>Presiona el botón <strong>"Enviar Postulación"</strong>.</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Soporte por WhatsApp -->
+    <div class="whatsapp-banner">
+        <div style="font-size: 2.5rem; color: #10b981; margin-bottom: 0.5rem;"><i class="fab fa-whatsapp"></i></div>
+        <h3 style="margin: 0 0 0.5rem 0; font-size: 1.3rem; color: #065f46;">¿Necesitas ayuda personalizada?</h3>
+        <p style="color: #047857; margin-bottom: 1.25rem; font-size: 0.95rem;">
+            Si tienes dudas o se te dificulta algún paso, escríbenos directamente a nuestro WhatsApp de atención y te ayudaremos con gusto.
+        </p>
+        <a href="https://wa.me/5492336454547" target="_blank" class="btn" style="background-color: #10b981; color: white; padding: 0.75rem 1.75rem; font-weight: 600; text-decoration: none; border-radius: 6px; display: inline-block;">
+            <i class="fab fa-whatsapp"></i> Hablar con Soporte por WhatsApp
+        </a>
+    </div>
+</div>
+{% endblock %}

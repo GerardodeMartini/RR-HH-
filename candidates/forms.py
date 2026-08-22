@@ -96,14 +96,18 @@ class CandidateProfileForm(forms.ModelForm):
         return candidate
 
 class CandidateRegisterForm(UserCreationForm):
+    first_name = forms.CharField(label='Nombre', max_length=50, required=True, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: Juan'}))
+    last_name = forms.CharField(label='Apellido', max_length=50, required=True, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: Pérez'}))
     turnstile = TurnstileField()
 
-    username = forms.CharField(label='Usuario', max_length=20, help_text='Requerido. 20 caracteres o menos. Letras, dígitos y @/./+/-/_ solamente.')
+    username = forms.CharField(label='Usuario', max_length=20, help_text='Requerido. 20 caracteres o menos. Letras, dígitos y @/./+/-/_ solamente.', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'ej: juanperez'}))
 
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = ('username', 'email')
+        fields = ('first_name', 'last_name', 'username', 'email')
         labels = {
+            'first_name': 'Nombre',
+            'last_name': 'Apellido',
             'username': 'Usuario',
             'email': 'Correo Electrónico',
         }
@@ -118,9 +122,20 @@ class CandidateRegisterForm(UserCreationForm):
             raise forms.ValidationError("Este correo electrónico ya se encuentra registrado en RRHH MARINA. Por favor, utiliza otro o recupera tu contraseña.")
         return email
 
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.first_name = self.cleaned_data.get('first_name')
+        user.last_name = self.cleaned_data.get('last_name')
+        if commit:
+            user.save()
+        return user
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Force Spanish labels for password fields from UserCreationForm
+        self.fields['first_name'].widget.attrs.update({'class': 'form-control'})
+        self.fields['last_name'].widget.attrs.update({'class': 'form-control'})
+        self.fields['username'].widget.attrs.update({'class': 'form-control'})
+        self.fields['email'].widget.attrs.update({'class': 'form-control'})
         self.fields['username'].label = "Usuario"
         self.fields['email'].label = "Correo Electrónico" 
         self.fields['email'].required = True
@@ -129,7 +144,9 @@ class CandidateRegisterForm(UserCreationForm):
         if 'password1' in self.fields:
             self.fields['password1'].label = "Contraseña"
             self.fields['password1'].help_text = "La contraseña debe tener al menos 8 caracteres y no ser demasiado común."
+            self.fields['password1'].widget.attrs.update({'class': 'form-control'})
         
         if 'password2' in self.fields:
             self.fields['password2'].label = "Confirmar contraseña"
             self.fields['password2'].help_text = "Ingresa la misma contraseña para verificar."
+            self.fields['password2'].widget.attrs.update({'class': 'form-control'})

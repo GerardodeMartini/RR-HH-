@@ -34,5 +34,27 @@
         <p style="margin: 0;"><span style="color: var(--text-muted);">¿Olvidaste tu contraseña? </span><a href="{% url 'password_reset' %}" style="color: var(--accent-color); text-decoration: none; font-weight: 600;">Presiona aquí</a></p>
         <p style="margin: 0; color: var(--text-muted);">¿No tienes cuenta? <a href="{% url 'candidate_register' %}" style="color: var(--accent-color); font-weight: 600;">Regístrate aquí</a></p>
     </div>
+
+    <!-- Guía Rápida de Ayuda -->
+    <div style="margin-top: 2rem; border-top: 1px solid #e5e7eb; padding-top: 1.5rem; text-align: left;">
+        <h4 style="font-size: 0.95rem; font-weight: 600; color: #374151; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+            💡 Guía de Ayuda Rápida
+        </h4>
+        <details style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; padding: 0.6rem 0.8rem; margin-bottom: 0.5rem; font-size: 0.875rem;">
+            <summary style="font-weight: 500; cursor: pointer; color: #1f2937;">¿Cómo creo mi cuenta por primera vez?</summary>
+            <p style="margin: 0.5rem 0 0 0; color: #4b5563; line-height: 1.5;">
+                Toca en <strong>"Regístrate aquí"</strong>, completa tu Nombre, Apellido, Usuario, Email y Contraseña. Luego revisa tu correo electrónico para hacer clic en <strong>"Activar mi cuenta"</strong>.
+            </p>
+        </details>
+        <details style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; padding: 0.6rem 0.8rem; margin-bottom: 0.5rem; font-size: 0.875rem;">
+            <summary style="font-weight: 500; cursor: pointer; color: #1f2937;">¿Cómo recupero mi contraseña?</summary>
+            <p style="margin: 0.5rem 0 0 0; color: #4b5563; line-height: 1.5;">
+                Toca en <strong>"Presiona aquí"</strong> al lado de ¿Olvidaste tu contraseña?, ingresa tu email y presiona Enviar. Te llegará un correo con el botón para elegir tu nueva clave.
+            </p>
+        </details>
+        <p style="text-align: center; margin-top: 0.75rem; font-size: 0.85rem;">
+            <a href="{% url 'faq' %}" style="color: var(--accent-color); font-weight: 600; text-decoration: none;">Ver Centro de Ayuda completo &rarr;</a>
+        </p>
+    </div>
 </div>
 {% endblock %}

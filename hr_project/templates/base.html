@@ -65,6 +65,8 @@
                 <a href="{% url 'dashboard_home' %}">Panel Recruiter</a>
                 {% endif %}
 
+                <a href="{% url 'faq' %}">Centro de Ayuda</a>
+
                 <form action="{% url 'logout' %}" method="post" style="display:inline;">
                     {% csrf_token %}
                     <button type="submit" class="logout-btn-small">Cerrar Sesión</button>
@@ -79,6 +81,7 @@
                 <a href="/">Oportunidades</a>
                 <a href="{% url 'candidate_login' %}">Soy Candidato</a>
                 <a href="{% url 'client_login' %}">Soy Empresa</a>
+                <a href="{% url 'faq' %}">Ayuda / FAQ</a>
                 <a href="{% url 'dashboard_login' %}" class="logout-btn-small">Acceso Staff</a>
                 
                 <!-- Contact Button (Guest) -->

@@ -40,6 +40,7 @@ urlpatterns = [
     path('', client_views.vacancy_list, name='home'),
     path('vacancies/', client_views.vacancy_list, name='vacancy_list'),
     path('vacancy/<int:vacancy_id>/', client_views.vacancy_detail, name='vacancy_detail'),
+    path('ayuda/', client_views.faq_view, name='faq'),
 ]
 
 if settings.DEBUG:
