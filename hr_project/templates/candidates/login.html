@@ -8,6 +8,19 @@
 
     <form method="POST">
         {% csrf_token %}
+
+        {% if form.errors %}
+        <div style="background-color: #fee2e2; border: 1px solid #f87171; color: #991b1b; padding: 0.75rem; border-radius: 6px; margin-bottom: 1rem; font-size: 0.875rem; text-align: left;">
+            <strong>No se pudo iniciar sesión:</strong>
+            <ul style="margin: 0.5rem 0 0 1rem; padding: 0;">
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
         <div class="form-group" style="text-align: left;">
             <label>Usuario</label>
             <input type="text" name="username" required class="form-control" style="width: 100%;">
@@ -43,7 +56,13 @@
         <details style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; padding: 0.6rem 0.8rem; margin-bottom: 0.5rem; font-size: 0.875rem;">
             <summary style="font-weight: 500; cursor: pointer; color: #1f2937;">¿Cómo creo mi cuenta por primera vez?</summary>
             <p style="margin: 0.5rem 0 0 0; color: #4b5563; line-height: 1.5;">
-                Toca en <strong>"Regístrate aquí"</strong>, completa tu Nombre, Apellido, Usuario, Email y Contraseña. Luego revisa tu correo electrónico para hacer clic en <strong>"Activar mi cuenta"</strong>.
+                Toca en <strong>"Regístrate aquí"</strong>, llena tus datos y luego revisa el correo electrónico que asociaste a la cuenta para presionar <strong>"Activar mi cuenta"</strong>.
+            </p>
+        </details>
+        <details style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; padding: 0.6rem 0.8rem; margin-bottom: 0.5rem; font-size: 0.875rem;">
+            <summary style="font-weight: 500; cursor: pointer; color: #1f2937;">¿Por qué es necesario activar mi cuenta?</summary>
+            <p style="margin: 0.5rem 0 0 0; color: #4b5563; line-height: 1.5;">
+                Activar tu cuenta desde el email es indispensable para poder subir tu CV y garantizar que todas las notificaciones y novedades sobre tus postulaciones lleguen a tu casilla de email.
             </p>
         </details>
         <details style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; padding: 0.6rem 0.8rem; margin-bottom: 0.5rem; font-size: 0.875rem;">

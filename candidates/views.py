@@ -42,7 +42,20 @@ def candidate_login(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
+            messages.success(request, f'¡Bienvenido/a {user.first_name or user.username}!')
             return redirect('candidate_dashboard')
+        else:
+            # Check if user exists but is not active yet (email unverified)
+            username = request.POST.get('username', '').strip()
+            user_obj = User.objects.filter(username__iexact=username).first()
+            if not user_obj:
+                user_obj = User.objects.filter(email__iexact=username).first()
+
+            if user_obj and not user_obj.is_active:
+                messages.error(request, '⚠️ Tu cuenta aún no ha sido activada. Por favor revisa el correo electrónico que te enviamos (incluyendo la carpeta de Spam) y presiona "Activar mi cuenta".')
+            else:
+                messages.error(request, 'Usuario o contraseña incorrectos. Por favor verifica tus credenciales.')
+            return render(request, 'candidates/login.html', {'form': form})
     else:
         form = AuthenticationForm()
     return render(request, 'candidates/login.html', {'form': form})
@@ -62,17 +75,26 @@ def candidate_register(request):
             user.save()
             
             # Link candidate profile to user with real name
-            candidate_obj = Candidate.objects.create(
-                user=user, 
-                email=user.email,
-                first_name=user.first_name,
-                last_name=user.last_name
-            )
+            candidate_obj = Candidate.objects.filter(email__iexact=user.email).first()
+            if candidate_obj:
+                candidate_obj.user = user
+                if user.first_name:
+                    candidate_obj.first_name = user.first_name
+                if user.last_name:
+                    candidate_obj.last_name = user.last_name
+                candidate_obj.save()
+            else:
+                candidate_obj = Candidate.objects.create(
+                    user=user, 
+                    email=user.email,
+                    first_name=user.first_name,
+                    last_name=user.last_name
+                )
             
             from utils.emails import send_activation_email
             send_activation_email(request, user, 'activate_candidate')
             
-            messages.info(request, "¡Registro casi completo! Te hemos enviado un correo electrónico con un enlace para verificar tu cuenta. Por favor, revisa tu bandeja de entrada (y la carpeta de Spam) para activarla y poder iniciar sesión.")
+            messages.info(request, "¡Registro casi completo! Te hemos enviado un correo electrónico con un enlace para verificar tu cuenta. 📌 Recuerda que es necesario activar tu cuenta para poder subir tu currículum y postularte a vacantes, garantizando que todas las notificaciones lleguen correctamente a tu casilla de correo.")
             return redirect('candidate_login')
     else:
         form = CandidateRegisterForm()
@@ -85,8 +107,21 @@ def candidate_dashboard(request):
         messages.error(request, 'Este portal es exclusivo para candidatos.')
         return redirect('vacancy_list')
         
-    # Ensure user has a candidate profile
-    candidate, created = Candidate.objects.get_or_create(user=request.user)
+    # Ensure user has a candidate profile linked
+    candidate = Candidate.objects.filter(user=request.user).first()
+    if not candidate:
+        candidate = Candidate.objects.filter(email__iexact=request.user.email).first()
+        if candidate:
+            candidate.user = request.user
+            candidate.save()
+        else:
+            candidate = Candidate.objects.create(
+                user=request.user,
+                email=request.user.email,
+                first_name=request.user.first_name or "",
+                last_name=request.user.last_name or ""
+            )
+
     if candidate.first_name == request.user.username:
         if request.user.first_name and request.user.first_name != request.user.username:
             candidate.first_name = request.user.first_name
