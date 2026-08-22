@@ -9,6 +9,18 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
+import os
+from django.utils.text import slugify
+
+def candidate_resume_upload_path(instance, filename):
+    ext = os.path.splitext(filename)[1].lower()
+    base = os.path.splitext(filename)[0]
+    clean_base = slugify(base)
+    if not clean_base:
+        clean_base = 'cv'
+    unique_id = uuid.uuid4().hex[:8]
+    return f"resumes/{clean_base}_{unique_id}{ext}"
+
 class Candidate(models.Model):
     AVAILABILITY_CHOICES = [
         ('active', 'Active (Looking)'),
@@ -22,7 +34,7 @@ class Candidate(models.Model):
     email = models.EmailField(unique=True)
     secondary_email = models.CharField(max_length=255, blank=True, null=True, help_text="Correos secundarios separados por coma")
     phone = models.CharField(max_length=20, blank=True)
-    resume_file = models.FileField(upload_to='resumes/', blank=True, null=True)
+    resume_file = models.FileField(upload_to=candidate_resume_upload_path, blank=True, null=True)
     skills = models.TextField(blank=True, help_text="Habilidades separadas por coma o descripción breve")
     tags = models.ManyToManyField(Tag, blank=True, related_name='candidates')
     
